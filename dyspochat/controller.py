@@ -40,7 +40,7 @@ def add_user(username, password):
 def get_recipient_in_room(room_id):
     r = []
     for i in ChatRecipient.query.all():
-        if str(i.chatroom.room_id) = str(room_id):
+        if str(i.chatroom.room_id) == str(room_id):
             r.append(i.user)
     
     return r
