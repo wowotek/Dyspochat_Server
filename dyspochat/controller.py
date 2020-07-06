@@ -28,6 +28,7 @@ def add_user(username, password):
     try:
         user = User(username=username, password=password)
         db.session.add(user)
+        db.session.commit()
         return (True, get_user_username(user.username))
     except Exception as e:
         return (False, "server_error")
@@ -43,6 +44,7 @@ def add_recipient(chatroom, user):
     recipients = ChatRecipient(chatroom=chatroom, user=user)
     try:
         db.session.add(recipients)
+        db.session.commit()
         return (True, get_recipient_user(user))
     except Exception as e:
         return (False, "server_error")
@@ -64,11 +66,12 @@ def create_chat(initial_recipient: User):
     chatroom = Chatroom(room_id=room_id)
     try:
         db.session.add(chatroom)
+        db.session.commit()
         chatroom = get_chatroom_room_id(room_id)
         recipients = add_recipient(chatroom, initial_recipient)
         return (True, (chatroom, recipients[1]))
     except Exception as e:
-        return (False, "server_error")
+        return (False, e)
 
 def get_messages():
     return [i for i in Message.query.all()]
@@ -86,6 +89,7 @@ def add_message(user: User, chatroom: Chatroom, content: str):
 
     try:
         db.session.add(message)
+        db.session.commit()
         return True
     except Exception as e:
         return False

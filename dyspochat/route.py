@@ -57,16 +57,14 @@ def chat_create():
 
     user = get_user_id(int(user_id))
     if(user == None):
-        return json_response(
-            act_status=False,
-            chat={},
-            cause="user_invalid"
-        )
+        return json_response(act_status=False, chat={}, cause="user_invalid")
     else:
         chat = create_chat(user)
+
         if chat[0]:
             chatroom = chat[1][0]
             recipient = chat[1][1]
+
             return json_response(
                 act_status=True,
                 data={
@@ -79,6 +77,12 @@ def chat_create():
                         "user_id": recipient.user.id
                     }
                 },
+                cause=""
+            )
+        else:
+            return json_response(
+                act_status=False,
+                data={},
                 cause=""
             )
 
