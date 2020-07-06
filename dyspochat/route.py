@@ -83,7 +83,7 @@ def chat_create():
             return json_response(
                 act_status=False,
                 data={},
-                cause=""
+                cause=chat[1]
             )
 
 @app.route("/chat/join", methods=["POST"])
