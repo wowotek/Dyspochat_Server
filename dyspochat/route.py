@@ -89,11 +89,11 @@ def chat_create():
 @app.route("/chat/join", methods=["POST"])
 def chat_join():
     room_id = request.form["room_id"]
-    user_id = request.form["user_id"]
+    user_id = int(request.form["user_id"])
     
     # check if user already exist
     for i in ChatRecipient.query.all():
-        if i.chatroom_id == int(room_id):
+        if i.chatroom_id == str(room_id):
             if i.user_id == int(user_id):
                 chatroom = get_chatroom_room_id(room_id)
                 return json_response(
