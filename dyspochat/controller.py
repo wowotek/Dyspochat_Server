@@ -71,6 +71,7 @@ def create_chat(initial_recipient: User):
         recipients = add_recipient(chatroom, initial_recipient)
         return (True, (chatroom, recipients[1]))
     except Exception as e:
+        print(e)
         return (False, e)
 
 def get_messages():
