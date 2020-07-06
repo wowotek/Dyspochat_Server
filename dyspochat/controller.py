@@ -31,6 +31,8 @@ def add_user(username, password):
         db.session.commit()
         return (True, get_user_username(user.username))
     except Exception as e:
+        print("ERROR --- ERROR", e)
+        db.session.rollback()
         return (False, "server_error")
         
 
@@ -47,6 +49,8 @@ def add_recipient(chatroom, user):
         db.session.commit()
         return (True, get_recipient_user(user))
     except Exception as e:
+        print("ERROR --- ERROR", e)
+        db.session.rollback()
         return (False, "server_error")
         
 def get_chatroom_id(chatroom_id):
@@ -71,7 +75,8 @@ def create_chat(initial_recipient: User):
         recipients = add_recipient(chatroom, initial_recipient)
         return (True, (chatroom, recipients[1]))
     except Exception as e:
-        print(e)
+        print("ERROR --- ERROR", e)
+        db.session.rollback()
         return (False, e)
 
 def get_messages():
@@ -93,5 +98,7 @@ def add_message(user: User, chatroom: Chatroom, content: str):
         db.session.commit()
         return True
     except Exception as e:
+        print("ERROR --- ERROR", e)
+        db.session.rollback()
         return False
         
