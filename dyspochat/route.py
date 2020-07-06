@@ -127,7 +127,7 @@ def chat():
 
 @app.route("/chat/get_room_recipient", methods=["POST"])
 def get_room_recipient():
-    room_id = request.form["room_recipient"]
+    room_id = request.form["room_id"]
 
     return json_response(
         act_status=True,
