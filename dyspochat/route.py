@@ -95,25 +95,27 @@ def chat_join():
     for i in ChatRecipient.query.all():
         if i.chatroom.room_id == str(room_id):
             if i.user_id == int(user_id):
-                chatroom = get_chatroom_room_id(room_id)
                 return json_response(
-                    act_status=True,
-                    chatroom={
-                        "id": chatroom.id,
-                        "room_id": chatroom.room_id
-                    },
-                    cause=""
+                    act_status=False,
+                    chatroom={},
+                    cause="user_in_chatroom"
                 )
-            return json_response(
-                act_status=False,
-                chatroom={},
-                cause="user_invalid"
-            )
+
+    chatroom = get_chatroom_room_id(room_id)
+    if chatroom != None:
         return json_response(
-            act_status=False,
-            chatroom={},
-            cause="chatroom_invalid"
+            act_status=True,
+            chatroom={
+                "id": chatroom.id,
+                "room_id": chatroom.room_id
+            },
+            cause=""
         )
+    return json_response(
+        act_status=False,
+        chatroom={},
+        cause="chatroom_invalid"
+    )
 
 @app.route("/chat", methods=["POST"])
 def chat():
