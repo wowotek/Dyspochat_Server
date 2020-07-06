@@ -54,9 +54,9 @@ def get_chatroom_id(chatroom_id):
         if int(chatroom_id) == int(i.id):
             return i
 
-def get_chatroom_room_id(room_id):
+def get_chatroom_room_id(room_id: str):
     for i in Chatroom.query.all():
-        if int(room_id) == int(i.room_id):
+        if str(room_id) == str(i.room_id):
             return i
 
 def create_chat(initial_recipient: User):
