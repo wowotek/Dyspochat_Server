@@ -92,7 +92,7 @@ def chat_join():
     user_id = request.form["user_id"]
     
     # check if user already exist
-    for i in sess.query(ChatRecipient).all():
+    for i in ChatRecipient.query.all():
         if i.chatroom_id == int(room_id):
             if i.user_id == int(user_id):
                 chatroom = get_chatroom_room_id(room_id)
