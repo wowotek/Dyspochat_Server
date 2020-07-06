@@ -93,7 +93,7 @@ def chat_join():
     
     # check if user already exist
     for i in ChatRecipient.query.all():
-        if i.chatroom_id == str(room_id):
+        if i.chatroom.room_id == str(room_id):
             if i.user_id == int(user_id):
                 chatroom = get_chatroom_room_id(room_id)
                 return json_response(
