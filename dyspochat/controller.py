@@ -61,7 +61,7 @@ def create_chat(initial_recipient: User):
     salt_data = str(time.time()) + "abcdefghijklmnopqrtuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"[randint(0, 51)] + str(randint(0, 10000000))
     room_id = hashlib.md5((initial_recipient.username + initial_recipient.password + salt_data).encode("utf-8")).hexdigest()
 
-    chatroom = Chatroom(room_id)
+    chatroom = Chatroom(room_id=room_id)
     try:
         db.session.add(chatroom)
         chatroom = get_chatroom_room_id(room_id)
