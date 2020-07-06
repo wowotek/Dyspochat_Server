@@ -59,7 +59,7 @@ def get_chatroom_room_id(room_id):
 
 def create_chat(initial_recipient: User):
     salt_data = str(time.time()) + "abcdefghijklmnopqrtuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"[randint(0, 51)] + str(randint(0, 10000000))
-    room_id = "".join([hashlib.md5((initial_recipient.username + initial_recipient.password + salt_data).encode("utf-8")).hexdigest()[i] for i in range(44)])
+    room_id = hashlib.md5((initial_recipient.username + initial_recipient.password + salt_data).encode("utf-8")).hexdigest()
 
     chatroom = Chatroom(room_id)
     try:
