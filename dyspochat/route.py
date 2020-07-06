@@ -64,7 +64,7 @@ def chat_create():
         )
     else:
         chat = create_chat(user)
-        if char[0]:
+        if chat[0]:
             chatroom = chat[1][0]
             recipient = chat[1][1]
             return json_response(
