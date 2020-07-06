@@ -92,29 +92,28 @@ def chat_join():
     user_id = request.form["user_id"]
     
     # check if user already exist
-    with db.session() as sess:
-        for i in sess.query(ChatRecipient).all():
-            if i.chatroom_id == int(room_id):
-                if i.user_id == int(user_id):
-                    chatroom = get_chatroom_room_id(room_id)
-                    return json_response(
-                        act_status=True,
-                        chatroom={
-                            "id": chatroom.id,
-                            "room_id": chatroom.room_id
-                        },
-                        cause=""
-                    )
+    for i in sess.query(ChatRecipient).all():
+        if i.chatroom_id == int(room_id):
+            if i.user_id == int(user_id):
+                chatroom = get_chatroom_room_id(room_id)
                 return json_response(
-                    act_status=False,
-                    chatroom={},
-                    cause="user_invalid"
+                    act_status=True,
+                    chatroom={
+                        "id": chatroom.id,
+                        "room_id": chatroom.room_id
+                    },
+                    cause=""
                 )
             return json_response(
                 act_status=False,
                 chatroom={},
-                cause="chatroom_invalid"
+                cause="user_invalid"
             )
+        return json_response(
+            act_status=False,
+            chatroom={},
+            cause="chatroom_invalid"
+        )
 
 @app.route("/chat", methods=["POST"])
 def chat():
