@@ -37,6 +37,14 @@ def add_user(username, password):
         
 
 # Chat
+def get_recipient_in_room(room_id):
+    r = []
+    for i in ChatRecipient.query.all():
+        if str(i.chatroom.room_id) = str(room_id):
+            r.append(i.user)
+    
+    return r
+
 def get_recipient_user(user):
     for i in ChatRecipient.query.all():
         if(i.user_id == user.id):
