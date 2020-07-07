@@ -42,7 +42,7 @@ def get_recipient_in_room(room_id):
     for i in ChatRecipient.query.all():
         if str(i.chatroom.room_id) == str(room_id):
             r.append(i.user)
-    
+
     return r
 
 def get_recipient_user(user):
@@ -60,7 +60,18 @@ def add_recipient(chatroom, user):
         print("ERROR --- ERROR", e)
         db.session.rollback()
         return (False, "server_error")
-        
+
+def remove_recipient(chatroom, user):
+    recipients = ChatRecipient(chatroom=chatroom, user=user)
+    try:
+        db.session.delete(recipients)
+        db.session.commit()
+        return True
+    except Exception as e:
+        print("ERROR --- ERROR", e)
+        db.session.rollback()
+        return False
+
 def get_chatroom_id(chatroom_id):
     for i in Chatroom.query.all():
         if int(chatroom_id) == int(i.id):
@@ -97,16 +108,3 @@ def get_message(user, chatroom):
             messages.append(i)
     
     return messages
-
-def add_message(user: User, chatroom: Chatroom, content: str):
-    message = Message(user=user, chatroom=chatroom, content=str(content))
-
-    try:
-        db.session.add(message)
-        db.session.commit()
-        return True
-    except Exception as e:
-        print("ERROR --- ERROR", e)
-        db.session.rollback()
-        return False
-        

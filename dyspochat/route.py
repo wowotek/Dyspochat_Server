@@ -102,14 +102,22 @@ def chat_join():
                 )
 
     chatroom = get_chatroom_room_id(room_id)
+    user=get_user_id(int(user_id))
     if chatroom != None:
+        join_status = add_recipient(chatroom=chatroom, user=user)
+        if join_status[0]:
+            return json_response(
+                act_status=True,
+                chatroom={
+                    "id": chatroom.id,
+                    "room_id": chatroom.room_id
+                },
+                cause=""
+            )
         return json_response(
-            act_status=True,
-            chatroom={
-                "id": chatroom.id,
-                "room_id": chatroom.room_id
-            },
-            cause=""
+            act_status=False,
+            chatroom={},
+            cause="server_error"
         )
     return json_response(
         act_status=False,
@@ -117,13 +125,28 @@ def chat_join():
         cause="chatroom_invalid"
     )
 
-@app.route("/chat", methods=["POST"])
-def chat():
-    user_id = request.form["user_id"]
-    chatroom_id = request.form["chatroom_id"]
-    content = request.form["content"]
+@app.route("/chat/leave", methods=["POST"])
+def chat_leave():
+    room_id = request.form["room_id"]
+    user_id = int(request.form["user_id"])
 
-    return json_response(act_status=add_message(get_user_id(int(user_id)), get_chatroom_room_id(chatroom_id), content))
+    chatroom = get_chatroom_room_id(room_id)
+    user=get_user_id(int(user_id))
+    if chatroom != None:
+        join_status = remove_recipient(chatroom=chatroom, user=user)
+        if join_status[0]:
+            return json_response(
+                act_status=True,
+                cause=""
+            )
+        return json_response(
+            act_status=False,
+            cause="server_error"
+        )
+    return json_response(
+        act_status=False,
+        cause="chatroom_invalid"
+    )
 
 @app.route("/chat/get_room_recipient", methods=["POST"])
 def get_room_recipient():
@@ -138,3 +161,10 @@ def get_room_recipient():
             } for i in get_recipient_in_room(str(room_id))
         ]
     )
+
+@app.route("/chat/create_session", methods=["POST"])
+def start_session():
+    room_id = request.form["room_id"]
+    user_id = int(request.form["user_id"])
+
+    allowed_port = [5250 + i for i in range(4000)]
