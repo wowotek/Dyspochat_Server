@@ -1,3 +1,4 @@
+import time
 import random
 from hashlib import sha512
 
@@ -32,3 +33,54 @@ class Chatroom:
     
     def add_chat(self, chatMessage: Chat):
         self.chat.add(chatMessage)
+
+class SessionData:
+    def __init__(self, key: str, data, valid_until: float):
+        self.key = key
+        self.data = data
+        self.valid_until = valid_until
+    
+    def get(self) -> set:
+        return {
+            "key": self.key,
+            "data": self.data
+        }
+
+class Session:
+    def __init__(self, id: int=0):
+        self.id = id
+        self.timestamp = str(time.time())
+
+        random_code = "".join(["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"[random.randint(0, 51)] for _ in range(128)])
+        random_person = ["erlangga", "aurelia", "michael", "ibrahim", "gabriele", "orlando", "wowotek", "benita", "mchlorlnd"][random.randint(0, 8)]
+
+        self.session_hash = sha512((self.timestamp + random_code + random_person).encode("utf-8")).hexdigest()
+        self.session_data = set()
+    
+    def add_data(self, data: SessionData) -> bool:
+        try:
+            self.session_data.add(data)
+        except Exception as e:
+            print(f"Error adding session data to session({self.id}): {e}", flush=True)
+            return False
+        return True
+    
+    def del_data(self, target_key: str) -> bool:
+        try:
+            for i in self.session_data:
+                if i.key == target_key:
+                    self.session_data.remove(i)
+                    return True
+            return False
+        except Exception as e:
+            print(f"Error deleteing session data at session({self.id}): {e}", flush=True)
+            return False
+    
+    def get_data(self, target_key: str) -> SessionData:
+        for i in self.session_data:
+            if i.key == target_key:
+                if time.time() >= i.valid_until:
+                    return None 
+                return i
+        return None
+

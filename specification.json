@@ -1,0 +1,387 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "version": "0.02",
+        "title": "Dyspochat",
+        "license": {
+            "name": "Proprietary"
+        }
+    },
+    "servers": [
+        {
+            "url": "https://127.0.0.1:5000"
+        }
+    ],
+    "paths": {
+        "/user": {
+            "put": {
+                "summary": "User Register",
+                "operationId": "userRegister",
+                "tags": [
+                    "user",
+                    "auth"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "username",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "username": {
+                                        "description": "username of user",
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "description": "password user",
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Register Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResponse"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "User Login",
+                "operationId": "userLogin",
+                "tags": [
+                    "user",
+                    "auth"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "username",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "username": {
+                                        "description": "username of user",
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "description": "password user",
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SessionResponse"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "User Unregister",
+                "operationId": "userDelete",
+                "tags": [
+                    "user"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "user_id"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "description": "user target id",
+                                        "type": "integer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Delete Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResponse"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "User Info",
+                "operationId": "userInfo",
+                "tags": [
+                    "user"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "user_id"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "description": "user target id",
+                                        "type": "integer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User Info Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResponse"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ErrorResponse": {
+                "type": "object",
+                "required": [
+                    "status"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    }
+                }
+            },
+            "UserResponse": {
+                "type": "object",
+                "required": [
+                    "status"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "user": {
+                        "type": "object",
+                        "$ref": "#/components/schemas/User"
+                    }
+                }
+            },
+            "SessionResponse": {
+                "type": "object",
+                "required": [
+                    "status"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "session": {
+                        "type": "object",
+                        "$ref": "#/components/schemas/Session"
+                    }
+                }
+            },
+            "User": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "username"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "pseudonym": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Chat": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "sender",
+                    "timestamp",
+                    "message"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "sender": {
+                        "type": "object",
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "timestamp": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Chatroom": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "recipients",
+                    "chats"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "recipients": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "$ref": "#/components/schemas/User"
+                        }
+                    },
+                    "chats": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "$ref": "#/components/schemas/Chat"
+                        }
+                    }
+                }
+            },
+            "SessionData": {
+                "type": "object",
+                "required": [
+                    "key",
+                    "data",
+                    "valid_until"
+                ],
+                "properties": {
+                    "key": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object"
+                    },
+                    "valid_until": {
+                        "type": "number",
+                        "format": "float"
+                    }
+                }
+            },
+            "Session": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "valid_until",
+                    "hash"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "valid_until": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "hash": {
+                        "type": "string"
+                    },
+                    "session_data": {
+                        "type": "object"
+                    }
+                }
+            }
+        }
+    }
+}
