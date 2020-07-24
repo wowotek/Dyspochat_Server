@@ -54,7 +54,7 @@ class Session:
         random_code = "".join(["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"[random.randint(0, 51)] for _ in range(128)])
         random_person = ["erlangga", "aurelia", "michael", "ibrahim", "gabriele", "orlando", "wowotek", "benita", "mchlorlnd"][random.randint(0, 8)]
 
-        self.session_hash = sha512((self.timestamp + random_code + random_person).encode("utf-8")).hexdigest()
+        self.session_hash = sha512((self.valid_until + random_code + random_person).encode("utf-8")).hexdigest()
         self.session_data = set()
     
     def add_data(self, data: SessionData) -> bool:
