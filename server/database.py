@@ -123,6 +123,6 @@ class Database:
         
         return (False, None)
     
-    # TODO: implement all chatroom required API
-    # TODO: implement all chat required API
-    # TODO: implement all session required API
+    # TODO: DATABASE_API/CHATROOM: implement all chatroom required API
+    # TODO: DATABASE_API/CHAT: implement all chat required API
+    # TODO: DATABASE_API/SESSION: implement all session required API

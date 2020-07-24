@@ -39,13 +39,13 @@ def ping():
 @app.route('/misc/hello', methods=['GET'])
 @require_apikey
 def apikey_check():
-    # TODO: make sure @require_apikey is sane -> properly checking database for valid apikey
+    # TODO: ENDPOINTS/MISC: make sure @require_apikey is sane -> properly checking database for valid apikey
     return json_response(data_="world")
 
 @app.route('/misc/sane', methods=['GET'])
 @require_apikey
 def sanity_check():
-    # TODO: implement sanity check, check wheter all the database api is correct using mockup data provided by database
+    # TODO: ENDPOINTS/MISC: implement sanity check, check wheter all the database api is correct using mockup data provided by database
     return json_response(data_="i am sane")
 ################ END MISC BLUEPRINTS ################
 
@@ -158,31 +158,31 @@ def user_get():
 @app.route('/chatroom', methods=['PUT'])
 @require_apikey
 def chatroom_add():
-    # TODO: Implement add chatroom
+    # TODO: ENDPOINTS/CHATROOM: Implement add chatroom
     ...
 
 @app.route('/chatroom', methods=['GET'])
 @require_apikey
 def chatroom_get():
-    # TODO: Implement get chatroom info
+    # TODO: ENDPOINTS/CHATROOM: Implement get chatroom info
     ...
 
 @app.route('/chatroom', methods=['DELETE'])
 @require_apikey
 def chatroom_delete():
-    # TODO: Implement deleting chatroom
+    # TODO: ENDPOINTS/CHATROOM: Implement deleting chatroom
     ...
 
 @app.route('/chatroom', methods=['POST'])
 @require_apikey
 def chatroom_add_recipients():
-    # TODO: Implement add recipients to chatroom
+    # TODO: ENDPOINTS/CHATROOM: Implement add recipients to chatroom
     ...
 
 @app.route('/chatroom', methods=['PATCH'])
 @require_apikey
 def chatroom_del_recipients():
-    # TODO: Implement deleting recipient from chatroom, reconsider: is this required ?
+    # TODO: ENDPOINTS/CHATROOM: Implement deleting recipient from chatroom, reconsider: is this required ?
     ...
 ############## END CHATROOM BLUEPRINTS ##############
 
@@ -190,13 +190,13 @@ def chatroom_del_recipients():
 @app.route('/chat', methods=['PUT'])
 @require_apikey
 def chat_add():
-    # TODO: Implement add chat to the chatroom
+    # TODO: ENDPOINTS/CHAT: Implement add chat to the chatroom
     ...
 
 @app.route('/chat', methods=['GET'])
 @require_apikey
 def chat_get():
-    # TODO: Implement get chat information
+    # TODO: ENDPOINTS/CHAT: Implement get chat information
     ...
 ################ END CHAT BLUEPRINTS ################
 
@@ -204,24 +204,24 @@ def chat_get():
 @app.route('/sessions', methods=['PUT'])
 @require_apikey
 def session_add_data():
-    # TODO: Implement add data to specific session
+    # TODO: ENDPOINTS/SESSIONS: Implement add data to specific session
     ...
 
 @app.route('/session', methods=['GET'])
 @require_apikey
 def session_get_data():
-    # TODO: Implement get data from specific session
+    # TODO: ENDPOINTS/SESSIONS: Implement get data from specific session
     ...
 
 @app.route('/session', methods=['DELETE'])
 @require_apikey
 def session_del_data():
-    # TODO: Implement delete data from session
+    # TODO: ENDPOINTS/SESSIONS: Implement delete data from session
     ...
 
 @app.route('/session', methods=['PURGE'])
 @require_apikey
 def session_invalidate():
-    # TODO: Implement session invalidation (logout)
+    # TODO: ENDPOINTS/SESSIONS: Implement session invalidation (logout)
     ...
 ############## END SESSIONS BLUEPRINTS ##############
