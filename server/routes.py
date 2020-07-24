@@ -158,32 +158,155 @@ def user_get():
 @app.route('/chatroom', methods=['PUT'])
 @require_apikey
 def chatroom_add():
-    # TODO: ENDPOINTS/CHATROOM: Implement add chatroom
-    ...
+    chatroom: Chatroom = db.add_chatroom()
+    if chatroom:
+        return json_response(
+            data_={
+                "status": "success",
+                "chatroom": {
+                    "id": chatroom.id
+                }
+            }
+        )
+    return json_response(
+        data_={
+            "status": "chatroom_internal_server_error"
+        }
+    )
 
 @app.route('/chatroom', methods=['GET'])
 @require_apikey
 def chatroom_get():
-    # TODO: ENDPOINTS/CHATROOM: Implement get chatroom info
-    ...
+    chatroom_id = int(request.form.get("chatroom_id", type=int, default=-1))
+
+    chatroom: Chatroom = db.get_chatroom(chatroom_id)
+    if chatroom:
+        return json_response(
+            data_={
+                "status": "success",
+                "chatroom": {
+                    "id": chatroom.id,
+                    "recipients": [
+                        {
+                            "id": i.id,
+                            "username": i.username,
+                            "pseudonym": i.pseudonym
+                        } for i in chatroom.recipients
+                    ],
+                    "chats": [
+                        {
+                            "id": i.id,
+                            "sender": {
+                                "id": i.sender.id,
+                                "username": i.sender.username,
+                                "pseudonym": i.sender.pseudonym
+                            },
+                            "timestamp": i.timestamp,
+                            "message": i.message
+                        } for i in chatroom.chats
+                    ]
+                }
+            }
+        )
+    return json_response(
+        data_={
+            "status": "chatroom_not_found"
+        }
+    )
 
 @app.route('/chatroom', methods=['DELETE'])
 @require_apikey
 def chatroom_delete():
-    # TODO: ENDPOINTS/CHATROOM: Implement deleting chatroom
-    ...
+    chatroom_id = int(request.form.get("chatroom_id", type=int, default=-1))
+
+    chatroom = db.delete_chatroom(chatroom_id)
+    if chatroom:
+        return json_response(
+            data_={
+                "status": "success",
+                "chatroom": {
+                    "id": chatroom.id
+                }
+            }
+        )
+    return json_response(
+        data_={
+            "status": "chatroom_not_found"
+        }
+    )
 
 @app.route('/chatroom', methods=['POST'])
 @require_apikey
 def chatroom_add_recipients():
-    # TODO: ENDPOINTS/CHATROOM: Implement add recipients to chatroom
-    ...
+    chatroom_id = int(request.form.get("chatroom_id", type=int, default=-1))
+    recipient_id = int(request.form.get("recipient_id", type=int, default=-1))
+
+    chatroom: Chatroom = db.get_chatroom(chatroom_id)
+    recipient: User = db.get_user_id(recipient_id)
+
+    if chatroom:
+        if recipient:
+            # check if recipient already exist
+            for i in chatroom.recipients:
+                if i.id == recipient.id:
+                    return json_response(
+                        data_={
+                            "status": "recipient_already_exist"
+                        }
+                    )
+            chatroom.add_recipients(recipient)
+            return json_response(
+                data_={
+                    "status": "success"
+                }
+            )
+        return json_response(
+            data_={
+                "status": "recipient_not_found"
+            }
+        )
+    return json_response(
+        data_={
+            "status": "chatroom_not_found"
+        }
+    )
+
 
 @app.route('/chatroom', methods=['PATCH'])
 @require_apikey
 def chatroom_del_recipients():
-    # TODO: ENDPOINTS/CHATROOM: Implement deleting recipient from chatroom, reconsider: is this required ?
-    ...
+    chatroom_id = int(request.form.get("chatroom_id", type=int, default=-1))
+    recipient_id = int(request.form.get("recipient_id", type=int, default=-1))
+
+    chatroom: Chatroom = db.get_chatroom(chatroom_id)
+    recipient: User = db.get_user_id(recipient_id)
+
+    if chatroom:
+        if recipient:
+            # check if recipient exist in chatroom
+            for i in chatroom.recipients:
+                if i.id == recipient.id:
+                    chatroom.recipients.remove(i)
+                    return json_response(
+                        data_={
+                            "status": "success"
+                        }
+                    )
+            return json_response(
+                data_={
+                    "status": "recipient_not_in_chatroom"
+                }
+            )
+        return json_response(
+            data_={
+                "status": "recipient_not_found"
+            }
+        )
+    return json_response(
+        data_={
+            "status": "chatroom_not_found"
+        }
+    )
 ############## END CHATROOM BLUEPRINTS ##############
 
 ################## CHAT BLUEPRINTS ##################

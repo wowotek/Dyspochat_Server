@@ -26,13 +26,13 @@ class Chatroom:
     def __init__(self, id: int):
         self.id = id
         self.recipients = set()
-        self.chat = set()
+        self.chats = set()
     
     def add_recipients(self, user: User):
         self.recipients.add(user)
     
     def add_chat(self, chatMessage: Chat):
-        self.chat.add(chatMessage)
+        self.chats.add(chatMessage)
 
 class SessionData:
     def __init__(self, key: str, data, valid_until: float):

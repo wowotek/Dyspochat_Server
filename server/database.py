@@ -47,6 +47,7 @@ class Database:
         self.db_apikey.add("test_api_key")
         ###########################################
     
+    ### SESSION API ###
     def add_session(self) -> Session:
         last_id: int = 0
         for i in self.db_session:
@@ -64,7 +65,9 @@ class Database:
 
     def get_session_all(self, session_hash: str) -> List[Session]:
         return [i for i in self.db_session]
+    ### END SESSION API ###
 
+    ### USER API ###
     def get_user_last_id(self) -> int:
         last_id: int = 0
         for i in self.db_user:
@@ -122,7 +125,48 @@ class Database:
                 return (True, i)
         
         return (False, None)
+    ### END USER API ###
     
-    # TODO: DATABASE_API/CHATROOM: implement all chatroom required API
+    ### CHATROOM API ###
+    def get_chatroom_last_id(self) -> int:
+        last_id: int = 0
+        for i in self.db_chatroom:
+            if i.id >= last_id:
+                last_id = i.id
+        
+        return last_id
+    
+    def get_chatroom(self, target_id: int) -> Union[Chatroom, None]:
+        for i in self.db_chatroom:
+            if i.id == target_id:
+                return i
+        return None
+    
+    def add_chatroom(self) -> Union[Chatroom, None]:
+        try:
+            chatroom: Chatroom = Chatroom(self.get_chatroom_last_id() + 1)
+            self.db_chatroom.add(chatroom)
+        except Exception as e:
+            print(f"Error adding chatroom: {e}")
+            return None
+        return chatroom
+
+    def delete_chatroom(self, target_id: int) -> Union[Chatroom, None]:
+        for i in self.db_chatroom:
+            if i.id == target_id:
+                chatroom = Chatroom(id=i.id)
+                chatroom.chat = i.chat
+                chatroom.recipients = i.recipients
+                self.db_chatroom.remove(i)
+                return chatroom
+        
+        return None
+    ### END CHATROOM API ###
+
+    ### CHAT API ###
     # TODO: DATABASE_API/CHAT: implement all chat required API
+    ### END CHAT API ###
+
+    ### SESSION API ###
     # TODO: DATABASE_API/SESSION: implement all session required API
+    ### END SESSION API ###
