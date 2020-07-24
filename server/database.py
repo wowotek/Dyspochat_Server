@@ -164,7 +164,14 @@ class Database:
     ### END CHATROOM API ###
 
     ### CHAT API ###
-    # TODO: DATABASE_API/CHAT: implement all chat required API
+    def get_chat_last_id(self, chatroom_id: int) -> int:
+        last_id: int = 0
+        for i in self.db_chatroom:
+            if i.id == chatroom_id:
+                for j in i.chat:
+                    if j.id >= last_id:
+                        last_id = j.id
+                return last_id
     ### END CHAT API ###
 
     ### SESSION API ###

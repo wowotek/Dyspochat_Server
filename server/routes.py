@@ -1,3 +1,4 @@
+import time
 from functools import wraps
 
 from flask import jsonify, request, abort
@@ -313,14 +314,83 @@ def chatroom_del_recipients():
 @app.route('/chat', methods=['PUT'])
 @require_apikey
 def chat_add():
-    # TODO: ENDPOINTS/CHAT: Implement add chat to the chatroom
-    ...
+    chatroom_id = int(request.form.get("chatroom_id", type=int, default=-1))
+    chat_sender = int(request.form.get("chat_sender", type=int, default=-1))
+    chat_message = str(request.form.get("chat_message", type=str, default=" "))
+
+    chatroom: Chatroom = db.get_chatroom(chatroom_id)
+    chat_sender: User = db.get_user_id(chat_sender)
+
+    if chatroom:
+        if chat_sender:
+            for i in chatroom.recipients:
+                if i.id == chat_sender.id:
+                    chat: Chat = Chat(db.get_chat_last_id(chatroom.id) + 1, chat_sender, time.time(), chat_message)
+                    chatroom.add_chat(chat)
+                    return json_response(
+                        data_={
+                            "status": "success"
+                        }
+                    )
+            return json_response(
+                data_={
+                    "status": "chat_sender_not_in_chatroom"
+                }
+            )
+        return json_response(
+            data_={
+                "status": "chat_sender_not_found"
+            }
+        )
+    return json_response(
+        data_={
+            "status": "chatroom_not_found"
+        }
+    )
 
 @app.route('/chat', methods=['GET'])
 @require_apikey
 def chat_get():
-    # TODO: ENDPOINTS/CHAT: Implement get chat information
-    ...
+    chatroom_id = int(request.form.get("chatroom_id", type=int, default=-1))
+    chat_sender = int(request.form.get("chat_sender", type=int, default=-1))
+
+    chatroom: Chatroom = db.get_chatroom(chatroom_id)
+    chat_sender: User = db.get_user_id(chat_sender)
+    if chatroom:
+        if chat_sender:
+            for i in chatroom.recipients:
+                if i.id == chat_sender.id:
+                    chats = []
+                    for i in chatroom.chats:
+                        if i.sender.id == chat_sender.id:
+                            chats.append(
+                                {
+                                    "id": i.id,
+                                    "timestamp": i.timestamp,
+                                    "message": i.message
+                                }
+                            )
+                    return json_response(
+                        data_={
+                            "status": "success",
+                            "chats": chats
+                        }
+                    )
+            return json_response(
+                data_={
+                    "status": "chat_sender_not_in_chatroom"
+                }
+            )
+        return json_response(
+            data_={
+                "status": "chat_sender_not_found"
+            }
+        )
+    return json_response(
+        data_={
+            "status": "chatroom_not_found"
+        }
+    )
 ################ END CHAT BLUEPRINTS ################
 
 ################ SESSIONS BLUEPRINTS ################
