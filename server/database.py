@@ -1,13 +1,51 @@
+import time
 from typing import Set, List, Tuple, Union
 
-from .models import User, Chat, Chatroom, Session
+from .models import User, Chat, Chatroom, Session, SessionData
 
 class Database:
     def __init__(self):
         self.db_user: Set[User] = set()
-        self.db_chat: Set[Chat] = set()
         self.db_chatroom: Set[Chatroom] = set()
+        self.db_chat: Set[Chat] = set()
         self.db_session: Set[Session] = set()
+        self.db_apikey: Set[str] = set()
+
+        self._add_sanity_check_data()
+
+    def _add_sanity_check_data(self):
+        #### Add Testing Data for Sanity Check ####
+        test_user_1 = User("test_user_1", "test_password", id=0)
+        test_user_2 = User("test_user_2", "test_password", id=1)
+        self.add_user(test_user_1)
+        self.add_user(test_user_2)
+
+        test_chatroom = Chatroom(0)
+        test_chatroom.add_recipients(test_user_1)
+        test_chatroom.add_recipients(test_user_2)
+        # TODO: SANITY_CHECK/CHATROOM: first, add chatroom to database using database api
+        # TODO: SANITY_CHECK/CHATROOM: second, get chatroom using database api
+        # TODO: SANITY_CHECK/CHATROOM: third, use get user from database api for adding recipients to test room
+
+        test_chat_1 = Chat(0, test_user_1, time.time(), "test chat from test_user_1 to test_user_2")
+        test_chat_2 = Chat(1, test_user_2, time.time(), "test chat from test_user_2 to test_user_2")
+        test_chatroom.add_chat(test_chat_1)
+        test_chatroom.add_chat(test_chat_2)
+        # TODO: SANITY_CHECK/CHAT: first get chatroom using database api
+        # TODO: SANITY_CHECK/CHAT: add test chat to chatroom which just got
+
+        test_sess = Session(id=0)
+        test_sess.session_hash = "test_session_hash"
+        test_sess.valid_until = -1
+        test_sess.add_data(SessionData("test_key_1", "test_value_string", -1))
+        test_sess.add_data(SessionData("test_key_2", 12345672945702348, -1))
+        test_sess.add_data(SessionData("test_key_3", 69.420, -1))
+        test_sess.add_data(SessionData("test_key_4", True, -1))
+        test_sess.add_data(SessionData("test_key_4", {"data_1": "data1", "data_2": 2}, -1))
+        
+        self.db_session.add(test_sess)
+        self.db_apikey.add("test_api_key")
+        ###########################################
     
     def add_session(self) -> Session:
         last_id: int = 0
@@ -19,10 +57,13 @@ class Database:
         self.db_session.add(session)
         return session
     
-    def get_session(self, session_hash: str) -> Union[User, None]:
+    def get_session(self, session_hash: str) -> Union[Session, None]:
         for i in self.db_session:
             if i.session_hash == session_hash:
                 return i
+
+    def get_session_all(self, session_hash: str) -> List[Session]:
+        return [i for i in self.db_session]
 
     def get_user_last_id(self) -> int:
         last_id: int = 0
@@ -81,3 +122,7 @@ class Database:
                 return (True, i)
         
         return (False, None)
+    
+    # TODO: implement all chatroom required API
+    # TODO: implement all chat required API
+    # TODO: implement all session required API

@@ -8,7 +8,7 @@ from .models import User, Chat, Chatroom, Session, SessionData
 
 
 ################# API-KEY DECORATOR #################
-def require_appkey(view_function):
+def require_apikey(view_function):
     @wraps(view_function)
     # the new, post-decoration function. Note *args and **kwargs here.
     def decorated_function(*args, **kwargs):
@@ -31,15 +31,27 @@ def require_session(view_function):
     return decorated_function
 ############### END SESSION DECORATOR ###############
 
-
-@app.route('/ping', methods=['GET'])
-def ping_pong():
+################## MISC BLUEPRINTS ##################
+@app.route('/misc/ping', methods=['GET'])
+def ping():
     return json_response(data_='pong!')
 
+@app.route('/misc/hello', methods=['GET'])
+@require_apikey
+def apikey_check():
+    # TODO: make sure @require_apikey is sane -> properly checking database for valid apikey
+    return json_response(data_="world")
+
+@app.route('/misc/sane', methods=['GET'])
+@require_apikey
+def sanity_check():
+    # TODO: implement sanity check, check wheter all the database api is correct using mockup data provided by database
+    return json_response(data_="i am sane")
+################ END MISC BLUEPRINTS ################
 
 ################## USER BLUEPRINTS ##################
 @app.route('/user', methods=['PUT'])
-@require_appkey
+@require_apikey
 def user_register():
     username: str = str(request.form.get("username", type=str))
     password: str = str(request.form.get("password", type=str))
@@ -64,7 +76,7 @@ def user_register():
 
 
 @app.route('/user', methods=['POST'])
-@require_appkey
+@require_apikey
 def user_login():
     username: str = str(request.form.get("username", type=str))
     password: str = str(request.form.get("password", type=str))
@@ -94,6 +106,7 @@ def user_login():
     )
 
 @app.route('/user', methods=['DELETE'])
+@require_apikey
 def user_unregister():
     user_id: int = int(request.form.get("user_id", type=int, default=-1))
     status = db.del_user_id(user_id)
@@ -117,6 +130,7 @@ def user_unregister():
     )
 
 @app.route('/user', methods=['GET'])
+@require_apikey
 def user_get():
     user_id: int = int(request.form.get("user_id", type=int, default=-1))
     user: User = db.get_user_id(user_id)
@@ -142,46 +156,72 @@ def user_get():
 
 ################ CHATROOM BLUEPRINTS ################
 @app.route('/chatroom', methods=['PUT'])
+@require_apikey
 def chatroom_add():
+    # TODO: Implement add chatroom
     ...
 
 @app.route('/chatroom', methods=['GET'])
+@require_apikey
 def chatroom_get():
+    # TODO: Implement get chatroom info
     ...
 
 @app.route('/chatroom', methods=['DELETE'])
+@require_apikey
 def chatroom_delete():
+    # TODO: Implement deleting chatroom
     ...
 
 @app.route('/chatroom', methods=['POST'])
+@require_apikey
 def chatroom_add_recipients():
+    # TODO: Implement add recipients to chatroom
     ...
 
 @app.route('/chatroom', methods=['PATCH'])
+@require_apikey
 def chatroom_del_recipients():
+    # TODO: Implement deleting recipient from chatroom, reconsider: is this required ?
     ...
 ############## END CHATROOM BLUEPRINTS ##############
 
 ################## CHAT BLUEPRINTS ##################
 @app.route('/chat', methods=['PUT'])
+@require_apikey
 def chat_add():
+    # TODO: Implement add chat to the chatroom
     ...
 
 @app.route('/chat', methods=['GET'])
+@require_apikey
 def chat_get():
+    # TODO: Implement get chat information
     ...
 ################ END CHAT BLUEPRINTS ################
 
 ################ SESSIONS BLUEPRINTS ################
 @app.route('/sessions', methods=['PUT'])
+@require_apikey
 def session_add_data():
+    # TODO: Implement add data to specific session
     ...
 
 @app.route('/session', methods=['GET'])
+@require_apikey
 def session_get_data():
+    # TODO: Implement get data from specific session
     ...
 
 @app.route('/session', methods=['DELETE'])
+@require_apikey
 def session_del_data():
+    # TODO: Implement delete data from session
+    ...
+
+@app.route('/session', methods=['PURGE'])
+@require_apikey
+def session_invalidate():
+    # TODO: Implement session invalidation (logout)
     ...
 ############## END SESSIONS BLUEPRINTS ##############

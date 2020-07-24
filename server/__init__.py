@@ -13,6 +13,8 @@ app.config.from_object(__name__)
 FlaskJSON(app)
 CORS(app, resources={r'/*': {'origins': '*'}})
 
+# TODO: create properly Signed SSL key and certificates
+# TODO: implement SSL Context
 
 db = Database()
 

@@ -49,7 +49,7 @@ class SessionData:
 class Session:
     def __init__(self, id: int=0):
         self.id = id
-        self.timestamp = str(time.time())
+        self.valid_until = str(time.time())
 
         random_code = "".join(["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"[random.randint(0, 51)] for _ in range(128)])
         random_person = ["erlangga", "aurelia", "michael", "ibrahim", "gabriele", "orlando", "wowotek", "benita", "mchlorlnd"][random.randint(0, 8)]
