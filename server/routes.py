@@ -17,7 +17,7 @@ def require_appkey(view_function):
         else:
             abort(401)
     return decorated_function
-#####################################################
+############### END API-KEY DECORATOR ###############
 
 ################# SESSION DECORATOR #################
 def require_session(view_function):
@@ -29,7 +29,7 @@ def require_session(view_function):
         else:
             abort(401)
     return decorated_function
-#####################################################
+############### END SESSION DECORATOR ###############
 
 
 @app.route('/ping', methods=['GET'])
@@ -37,6 +37,7 @@ def ping_pong():
     return json_response(data_='pong!')
 
 
+################## USER BLUEPRINTS ##################
 @app.route('/user', methods=['PUT'])
 @require_appkey
 def user_register():
@@ -115,7 +116,7 @@ def user_unregister():
         }
     )
 
-@app.route('/user/', methods=['GET'])
+@app.route('/user', methods=['GET'])
 def user_get():
     user_id: int = int(request.form.get("user_id", type=int, default=-1))
     user: User = db.get_user_id(user_id)
@@ -137,3 +138,50 @@ def user_get():
             }
         }
     )
+################ END USER BLUEPRINTS ################
+
+################ CHATROOM BLUEPRINTS ################
+@app.route('/chatroom', methods=['PUT'])
+def chatroom_add():
+    ...
+
+@app.route('/chatroom', methods=['GET'])
+def chatroom_get():
+    ...
+
+@app.route('/chatroom', methods=['DELETE'])
+def chatroom_delete():
+    ...
+
+@app.route('/chatroom', methods=['POST'])
+def chatroom_add_recipients():
+    ...
+
+@app.route('/chatroom', methods=['PATCH'])
+def chatroom_del_recipients():
+    ...
+############## END CHATROOM BLUEPRINTS ##############
+
+################## CHAT BLUEPRINTS ##################
+@app.route('/chat', methods=['PUT'])
+def chat_add():
+    ...
+
+@app.route('/chat', methods=['GET'])
+def chat_get():
+    ...
+################ END CHAT BLUEPRINTS ################
+
+################ SESSIONS BLUEPRINTS ################
+@app.route('/sessions', methods=['PUT'])
+def session_add_data():
+    ...
+
+@app.route('/session', methods=['GET'])
+def session_get_data():
+    ...
+
+@app.route('/session', methods=['DELETE'])
+def session_del_data():
+    ...
+############## END SESSIONS BLUEPRINTS ##############
