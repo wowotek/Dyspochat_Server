@@ -1,6 +1,11 @@
 #/bin/python3
 
+import os
 from server import app
 
 if __name__ == '__main__':
-    app.run(host="127.0.0.1", port=5000, ssl_context="adhoc")
+    os.system("sleep 0.5")
+    print()
+    print("--- Starting Server ---")
+    print()
+    app.run(host="0.0.0.0", port=6969)

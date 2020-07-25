@@ -2,6 +2,8 @@ import time
 import random
 from hashlib import sha512
 
+from .misc import generate_pseudonym
+
 class User:
     def __init__(self, username: str, password: str, id: int = 0):
         self.id = id
@@ -9,11 +11,8 @@ class User:
         self.password = password
         self.pseudonym = None
 
-        self.update_pseudonym()
-    
-    def update_pseudonym(self):
-        names = ["Alex", "Alessia", "Brad", "Belford", "Buds", "Conny", "Cris", "Chris", "Dennis", "Dolly", "Donnel", "Efra", "Essburn", "Emperor", "Fris", "Freskel", "Folly"]
-        self.pseudonym = names[random.randint(0, len(names)-1)] + " " + names[random.randint(0, len(names)-1)]
+        self.pseudonym = generate_pseudonym()
+        
 
 class Chat:
     def __init__(self, id: int, sender: User, timestamp: float, message: str):

@@ -6,7 +6,7 @@ from flask_json import json_response
 
 from . import app, db
 from .models import User, Chat, Chatroom, Session, SessionData
-
+from .misc import generate_pseudonym
 
 ################# API-KEY DECORATOR #################
 def require_apikey(view_function):
@@ -35,33 +35,66 @@ def require_session(view_function):
 ################## MISC BLUEPRINTS ##################
 @app.route('/misc/ping', methods=['GET'])
 def ping():
-    return json_response(data_='pong!')
+    return json_response(
+        data_={
+            "status": "success",
+            "message": "pong!"
+        }
+    )
 
 @app.route('/misc/hello', methods=['GET'])
 @require_apikey
 def apikey_check():
-    # TODO: ENDPOINTS/MISC: make sure @require_apikey is sane -> properly checking database for valid apikey
-    return json_response(data_="world")
+    return json_response(
+        data_={
+            "status": "success",
+            "message": "world"
+        }
+    )
 
 @app.route('/misc/sane', methods=['GET'])
 @require_apikey
 def sanity_check():
-    # TODO: ENDPOINTS/MISC: implement sanity check, check wheter all the database api is correct using mockup data provided by database
-    return json_response(data_="i am sane")
+    sanity_data = db.add_sanity_check_data()
+    print(sanity_data)
+    if db.remove_sanity_check_data(sanity_data):
+        return json_response(
+            data_={
+                "status": "success",
+                "message": "i_am_sane",
+                "sanity_data": sanity_data
+            }
+        )
+    return json_response(
+        data_={
+            "status": "failed",
+            "message": "i am insane"
+        }
+    )
+
+@app.route('/misc/pseudonym', methods=['GET'])
+def get_pseudonym():
+    return json_response(
+        data_={
+            "status": "success",
+            "pseudonym": generate_pseudonym()
+        }
+    )
+
 ################ END MISC BLUEPRINTS ################
 
 ################## USER BLUEPRINTS ##################
 @app.route('/user', methods=['PUT'])
 @require_apikey
 def user_register():
-    username: str = str(request.form.get("username", type=str))
-    password: str = str(request.form.get("password", type=str))
+    username: str = str(request.json["username"])
+    password: str = str(request.json["password"])
 
     add_status = db.add_user(User(username, password))
     if add_status[0]:
         return json_response(
             data_={
-                "status": "register_success",
+                "status": "success",
                 "user": {
                     "id": add_status[1].id,
                     "username": add_status[1].username
@@ -79,8 +112,8 @@ def user_register():
 @app.route('/user', methods=['POST'])
 @require_apikey
 def user_login():
-    username: str = str(request.form.get("username", type=str))
-    password: str = str(request.form.get("password", type=str))
+    username: str = str(request.json["username"])
+    password: str = str(request.json["password"])
 
     user: User = db.get_user_username(username)
     if user != None:
@@ -88,7 +121,7 @@ def user_login():
             session: Session = db.add_session()
             return json_response(
                 data_={
-                    "status": "login_success",
+                    "status": "success",
                     "session": {
                         "id": session.id,
                         "key": session.session_hash
@@ -109,7 +142,7 @@ def user_login():
 @app.route('/user', methods=['DELETE'])
 @require_apikey
 def user_unregister():
-    user_id: int = int(request.form.get("user_id", type=int, default=-1))
+    user_id: int = int(request.json["user_id"])
     status = db.del_user_id(user_id)
 
     if status[0]:
@@ -133,7 +166,7 @@ def user_unregister():
 @app.route('/user', methods=['GET'])
 @require_apikey
 def user_get():
-    user_id: int = int(request.form.get("user_id", type=int, default=-1))
+    user_id: int = int(request.json["user_id"])
     user: User = db.get_user_id(user_id)
 
     if user == None:
@@ -177,8 +210,9 @@ def chatroom_add():
 
 @app.route('/chatroom', methods=['GET'])
 @require_apikey
-def chatroom_get():
-    chatroom_id = int(request.form.get("chatroom_id", type=int, default=-1))
+def chatroom_info():
+    print("chatroom_info", request.json)
+    chatroom_id = int(request.json["chatroom_id"])
 
     chatroom: Chatroom = db.get_chatroom(chatroom_id)
     if chatroom:
@@ -218,7 +252,7 @@ def chatroom_get():
 @app.route('/chatroom', methods=['DELETE'])
 @require_apikey
 def chatroom_delete():
-    chatroom_id = int(request.form.get("chatroom_id", type=int, default=-1))
+    chatroom_id = int(request.json["chatroom_id"])
 
     chatroom = db.delete_chatroom(chatroom_id)
     if chatroom:
@@ -226,7 +260,9 @@ def chatroom_delete():
             data_={
                 "status": "success",
                 "chatroom": {
-                    "id": chatroom.id
+                    "id": chatroom.id,
+                    "chats": chatroom.chats,
+                    "recipients": chatroom.recipients
                 }
             }
         )
@@ -239,8 +275,9 @@ def chatroom_delete():
 @app.route('/chatroom', methods=['POST'])
 @require_apikey
 def chatroom_add_recipients():
-    chatroom_id = int(request.form.get("chatroom_id", type=int, default=-1))
-    recipient_id = int(request.form.get("recipient_id", type=int, default=-1))
+    print("chatroom_add_recipients", request.json)
+    chatroom_id = int(request.json["chatroom_id"])
+    recipient_id = int(request.json["recipient_id"])
 
     chatroom: Chatroom = db.get_chatroom(chatroom_id)
     recipient: User = db.get_user_id(recipient_id)
@@ -276,8 +313,8 @@ def chatroom_add_recipients():
 @app.route('/chatroom', methods=['PATCH'])
 @require_apikey
 def chatroom_del_recipients():
-    chatroom_id = int(request.form.get("chatroom_id", type=int, default=-1))
-    recipient_id = int(request.form.get("recipient_id", type=int, default=-1))
+    chatroom_id = int(request.json["chatroom_id"])
+    recipient_id = int(request.json["recipient_id"])
 
     chatroom: Chatroom = db.get_chatroom(chatroom_id)
     recipient: User = db.get_user_id(recipient_id)
@@ -290,7 +327,12 @@ def chatroom_del_recipients():
                     chatroom.recipients.remove(i)
                     return json_response(
                         data_={
-                            "status": "success"
+                            "status": "success",
+                            "user": {
+                                "id": recipient.id,
+                                "pseudonym": recipient.pseudonym,
+                                "username": recipient.username
+                            }
                         }
                     )
             return json_response(
@@ -314,9 +356,9 @@ def chatroom_del_recipients():
 @app.route('/chat', methods=['PUT'])
 @require_apikey
 def chat_add():
-    chatroom_id = int(request.form.get("chatroom_id", type=int, default=-1))
-    chat_sender = int(request.form.get("chat_sender", type=int, default=-1))
-    chat_message = str(request.form.get("chat_message", type=str, default=" "))
+    chatroom_id = int(request.json["chatroom_id"])
+    chat_sender = int(request.json["chat_sender"])
+    chat_message = str(request.json["chat_message"])
 
     chatroom: Chatroom = db.get_chatroom(chatroom_id)
     chat_sender: User = db.get_user_id(chat_sender)
@@ -350,9 +392,9 @@ def chat_add():
 
 @app.route('/chat', methods=['GET'])
 @require_apikey
-def chat_get():
-    chatroom_id = int(request.form.get("chatroom_id", type=int, default=-1))
-    chat_sender = int(request.form.get("chat_sender", type=int, default=-1))
+def chat_info():
+    chatroom_id = int(request.json["chatroom_id"])
+    chat_sender = int(request.json["chat_sender"])
 
     chatroom: Chatroom = db.get_chatroom(chatroom_id)
     chat_sender: User = db.get_user_id(chat_sender)
