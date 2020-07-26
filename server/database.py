@@ -228,7 +228,7 @@ class Database:
             if i.session_hash == session_hash:
                 return i
 
-    def get_session_all(self, session_hash: str) -> List[Session]:
+    def get_session_all(self) -> List[Session]:
         return [i for i in self.db_session]
     
     def del_session(self, session_hash: str) -> bool:
