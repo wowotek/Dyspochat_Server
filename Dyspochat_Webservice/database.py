@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import time
 from typing import Set, List, Tuple, Union
 

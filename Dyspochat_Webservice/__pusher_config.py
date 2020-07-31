@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 class PConfig:
     app_id='1045271'
     key='a41cf1ede332504cd58e'

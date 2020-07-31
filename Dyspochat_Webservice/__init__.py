@@ -1,4 +1,5 @@
 from flask import Flask
+#!/usr/bin/python3
 from flask_json import FlaskJSON, json_response
 from flask_cors import CORS
 import pusher

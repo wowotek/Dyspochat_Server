@@ -33,7 +33,7 @@ class User:
     
     def sub_speed(self, amount: int = 1):
         self.speed -= amount
-        
+#!/usr/bin/python3        
 
 class Chat:
     def __init__(self, id: int, sender: User, timestamp: float, message: str):
