@@ -1,7 +1,7 @@
 #/usr/bin/python3
 
 import time
-from webservice import app
+from Dyspochat_Webservice import app
 
 if __name__ == '__main__':
     time.sleep(0.5)
