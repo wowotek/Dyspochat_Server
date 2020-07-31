@@ -101,6 +101,7 @@ def user_register():
 
     add_status = db.add_user(User(username, password))
     if add_status[0]:
+        print(f"user {add_status[1].username} registered")
         return json_response(
             status_=201,
             data_={
@@ -113,7 +114,7 @@ def user_register():
         )
 
     return json_response(
-        status_=404,
+        status_=200,
         data_={
             "status": "username_already_exist"
         }
@@ -137,17 +138,22 @@ def user_login():
                     "session": {
                         "id": session.id,
                         "key": session.session_hash
+                    },
+                    "user": {
+                        "id": user.id,
+                        "username": user.username,
+                        "pseudonym": user.pseudonym
                     }
                 }
             )
         return json_response(
-            status_=403,
+            status_=200,
             data_={
                 "status": "auth_failed"
             }
         )
     return json_response(
-        status_=404,
+        status_=200,
         data_={
             "status": "user_not_found"
         }
@@ -212,6 +218,7 @@ def user_get():
 def chatroom_add():
     chatroom: Chatroom = db.add_chatroom()
     if chatroom:
+        print(f"{chatroom.id} created")
         return json_response(
             status_=201,
             data_={
@@ -222,17 +229,16 @@ def chatroom_add():
             }
         )
     return json_response(
-        status_=404,
+        status_=200,
         data_={
             "status": "chatroom_internal_server_error"
         }
     )
 
-@app.route('/chatroom', methods=['GET'])
+@app.route('/chatroom/<int:chatroom_id>', methods=['GET'])
 @require_apikey
-def chatroom_info():
-    print("chatroom_info", request.json)
-    chatroom_id = int(request.json["chatroom_id"])
+def chatroom_info(chatroom_id):
+    print("chatroom_info", chatroom_id)
 
     chatroom: Chatroom = db.get_chatroom(chatroom_id)
     if chatroom:
@@ -309,6 +315,14 @@ def chatroom_add_recipients():
     if chatroom:
         if recipient:
             # check if recipient already exist
+            chatroom.add_chat(
+                Chat(
+                    db.get_chat_last_id(chatroom.id),
+                    recipient,
+                    time.time(),
+                    f"{recipient.pseudonym} joined the party"
+                )
+            )
             for i in chatroom.recipients:
                 if i.id == recipient.id:
                     return json_response(
@@ -428,7 +442,6 @@ def chat_add():
                         str(chatroom.id),
                         u'new_chat',
                         {
-                            
                             "chat": {
                                 "id": chat.id,
                                 "timestamp": chat.timestamp,

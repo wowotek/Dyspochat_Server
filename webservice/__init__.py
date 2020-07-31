@@ -8,7 +8,11 @@ from .database import Database
 
 app = Flask(__name__)
 FlaskJSON(app)
-CORS(app, resources={r'/*': {'origins': '*'}})
+CORS(app, resources=
+    {
+        r'/*': {'origins': '*'}
+    }
+)
 db = Database()
 event_pusher = pusher.Pusher(
     app_id=PConfig.app_id,
