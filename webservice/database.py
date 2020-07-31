@@ -191,13 +191,17 @@ class Database:
         return None
 
     def delete_chatroom(self, target_id: int) -> Union[Chatroom, None]:
-        for i in self.db_chatroom:
-            if i.id == target_id:
-                chatroom = Chatroom(id=i.id)
-                chatroom.chat = i.chats
-                chatroom.recipients = i.recipients
-                self.db_chatroom.remove(i)
-                return chatroom
+        try:
+            for i in self.db_chatroom:
+                if i.id == target_id:
+                    chatroom = Chatroom(id=i.id)
+                    chatroom.chat = i.chats
+                    chatroom.recipients = i.recipients
+                    self.db_chatroom.remove(i)
+                    return chatroom
+        except Exception as e:
+            print(f"failed to delete chatroom ", end="")
+            print(e)
         return None
     ### END CHATROOM API ###
 

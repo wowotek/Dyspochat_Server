@@ -277,26 +277,31 @@ def chatroom_info(chatroom_id):
         }
     )
 
-@app.route('/chatroom', methods=['DELETE'])
+@app.route('/chatroom/<int:chatroom_id>', methods=['DELETE'])
 @require_apikey
-def chatroom_delete():
-    chatroom_id = int(request.json["chatroom_id"])
-
+def chatroom_delete(chatroom_id):
     chatroom = db.delete_chatroom(chatroom_id)
     if chatroom:
+        event_pusher.trigger(
+            str(chatroom.id),
+            u'del_chat',
+            {
+                "chatroom": {
+                    "id": chatroom.id
+                }
+            }
+        )
         return json_response(
             status_=200,
             data_={
                 "status": "success",
                 "chatroom": {
-                    "id": chatroom.id,
-                    "chats": chatroom.chats,
-                    "recipients": chatroom.recipients
+                    "id": chatroom.id
                 }
             }
         )
     return json_response(
-        status_=404,
+        status_=200,
         data_={
             "status": "chatroom_not_found"
         }
@@ -323,6 +328,20 @@ def chatroom_add_recipients():
                     f"{recipient.pseudonym} joined the party"
                 )
             )
+            event_pusher.trigger(
+                str(chatroom.id),
+                u'new_recipient',
+                {
+                    "chatroom": {
+                        "id": chatroom.id
+                    },
+                    "recipient": {
+                        "id": recipient.id,
+                        "username": recipient.username,
+                        "pseudonym": recipient.pseudonym
+                    }
+                }
+            )
             for i in chatroom.recipients:
                 if i.id == recipient.id:
                     return json_response(
@@ -332,17 +351,6 @@ def chatroom_add_recipients():
                         }
                     )
             chatroom.add_recipients(recipient)
-            event_pusher.trigger(
-                str(chatroom.id),
-                u'new_recipient',
-                {
-                    "recipient": {
-                        "id": recipient.id,
-                        "username": recipient.username,
-                        "pseudonym": recipient.pseudonym
-                    }
-                }
-            )
             return json_response(
                 status_=201,
                 data_={
@@ -377,11 +385,22 @@ def chatroom_del_recipients():
             # check if recipient exist in chatroom
             for i in chatroom.recipients:
                 if i.id == recipient.id:
+                    chatroom.add_chat(
+                        Chat(
+                            db.get_chat_last_id(chatroom.id),
+                            recipient,
+                            time.time(),
+                            f"{recipient.pseudonym} is leaving chatroom"
+                        )
+                    )
                     chatroom.recipients.remove(i)
                     event_pusher.trigger(
                         str(chatroom.id),
                         u'del_recipient',
                         {
+                            "chatroom": {
+                                "id": chatroom.id
+                            },
                             "recipient": {
                                 "id": recipient.id,
                                 "username": recipient.username,
@@ -442,6 +461,9 @@ def chat_add():
                         str(chatroom.id),
                         u'new_chat',
                         {
+                            "chatroom": {
+                                "id": chatroom.id
+                            },
                             "chat": {
                                 "id": chat.id,
                                 "timestamp": chat.timestamp,
