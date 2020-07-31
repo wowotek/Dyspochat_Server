@@ -4,9 +4,10 @@ from functools import wraps
 from flask import jsonify, request, abort
 from flask_json import json_response
 
-from . import app, db
+from . import app, db, event_pusher
 from .models import User, Chat, Chatroom, Session, SessionData
 from .misc import generate_pseudonym
+
 
 ################# API-KEY DECORATOR #################
 def require_apikey(view_function):
@@ -317,6 +318,17 @@ def chatroom_add_recipients():
                         }
                     )
             chatroom.add_recipients(recipient)
+            event_pusher.trigger(
+                str(chatroom.id),
+                u'new_recipient',
+                {
+                    "recipient": {
+                        "id": recipient.id,
+                        "username": recipient.username,
+                        "pseudonym": recipient.pseudonym
+                    }
+                }
+            )
             return json_response(
                 status_=201,
                 data_={
@@ -352,6 +364,17 @@ def chatroom_del_recipients():
             for i in chatroom.recipients:
                 if i.id == recipient.id:
                     chatroom.recipients.remove(i)
+                    event_pusher.trigger(
+                        str(chatroom.id),
+                        u'del_recipient',
+                        {
+                            "recipient": {
+                                "id": recipient.id,
+                                "username": recipient.username,
+                                "pseudonym": recipient.pseudonym
+                            }
+                        }
+                    )
                     return json_response(
                         status_=200,
                         data_={
@@ -398,8 +421,26 @@ def chat_add():
         if chat_sender:
             for i in chatroom.recipients:
                 if i.id == chat_sender.id:
-                    chat: Chat = Chat(db.get_chat_last_id(chatroom.id) + 1, chat_sender, time.time(), chat_message)
-                    chatroom.add_chat(chat)
+                    last_chat_id = db.get_chat_last_id(chatroom.id) + 1
+                    chatroom.add_chat(Chat(last_chat_id, chat_sender, time.time(), chat_message))
+                    chat: Chat = chatroom.get_chat_id(last_chat_id)
+                    event_pusher.trigger(
+                        str(chatroom.id),
+                        u'new_chat',
+                        {
+                            
+                            "chat": {
+                                "id": chat.id,
+                                "timestamp": chat.timestamp,
+                                "sender": {
+                                    "id": chat.sender.id,
+                                    "username": chat.sender.username,
+                                    "pseudonym": chat.sender.pseudonym
+                                },
+                                "message": chat.message
+                            }
+                        }
+                    )
                     return json_response(
                         status_=201,
                         data_={
@@ -478,8 +519,33 @@ def chat_info():
 @app.route('/session', methods=['PURGE'])
 @require_apikey
 def session_invalidate():
-    # TODO: ENDPOINTS/SESSIONS: Implement session invalidation (logout)
-    ...
+    session_hash: str = str(request.json["session_hash"])
+
+    session: Session = db.get_session(session_hash)
+    if session:
+        if db.del_session(session_hash):
+            return json_response(
+                status_=201,
+                data_={
+                    "status": "success",
+                    "session": {
+                            "id": session.id,
+                            "valid_until": 0
+                    }
+                }
+            )
+        return json_response(
+            status_=500,
+            data_={
+                "status": "failed_to_invalidate_session"
+            }
+        )
+    return json_response(
+        status_=404,
+        data_={
+            "status": "session_not_found"
+        }
+    )
 
 @app.route('/sessions/data', methods=['PUT'])
 @require_apikey
@@ -498,8 +564,8 @@ def session_add_data():
                 data_={
                     "status": "success",
                     "session": {
-                            "id": session.id,
-                            "valid_until": session.valid_until
+                        "id": session.id,
+                        "valid_until": session.valid_until
                     },
                     "data": session_data.__dict__
                 }
@@ -587,6 +653,28 @@ def session_get_data():
 @app.route('/session/data', methods=['DELETE'])
 @require_apikey
 def session_del_data():
-    # TODO: ENDPOINTS/SESSIONS: Implement delete data from session
-    ...
+    session_hash: str = str(request.json["session_hash"])
+    data_key: str = str(request.json["data_key"])
+
+    session: Session = db.get_session(session_hash)
+    if session:
+        if session.del_data(data_key):
+            return json_response(
+                status_=200,
+                data_={
+                    "status": "success"
+                }
+            )
+        return json_response(
+            status_=404,
+            data_={
+                "status": "key_not_found"
+            }
+        )
+    return json_response(
+        status_=404,
+        data_={
+            "status": "session_not_found"
+        }
+    )
 ############## END SESSIONS BLUEPRINTS ##############

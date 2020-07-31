@@ -12,6 +12,27 @@ class User:
         self.pseudonym = None
 
         self.pseudonym = generate_pseudonym()
+
+        self.speed = 1  # km/h
+    
+    def new_pseudonym(self, random_times: int = 10):
+        if random_times > 300:
+            random_times = 300
+        
+        last_generated = []
+        new_pseudonym = generate_pseudonym()
+        for _ in range(random_times):
+            while new_pseudonym in last_generated:
+                new_pseudonym = generate_pseudonym()
+            last_generated.append(new_pseudonym)
+        
+        self.pseudonym = new_pseudonym        
+
+    def add_speed(self, amount: int = 1):
+        self.speed += amount
+    
+    def sub_speed(self, amount: int = 1):
+        self.speed -= amount
         
 
 class Chat:
@@ -32,6 +53,16 @@ class Chatroom:
     
     def add_chat(self, chatMessage: Chat):
         self.chats.add(chatMessage)
+    
+    def get_chat_timestamp(self, timestamp: float):
+        for i in self.chats:
+            if i.timestamp == timestamp:
+                return i
+    
+    def get_chat_id(self, id: int):
+        for i in self.chats:
+            if i.id == id:
+                return i
 
 class SessionData:
     def __init__(self, key: str, data, valid_until: float):
