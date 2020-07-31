@@ -1,4 +1,5 @@
+#!/usr/bin/python3
 import sys
 sys.path.insert(0, '/var/www/Dyspochat_Webservice/')
-from webservice import app as application
+from Dyspochat_Webservice import app as application
 application.secret_key = "wowotek-secret-key"
