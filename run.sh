@@ -1,1 +1,1 @@
-source venv/bin/activate && sudo -u www-data "venv/bin/gunicorn --config gunicorn_config.py wsgi:app --workers 1"
+venv/bin/gunicorn --config gunicorn_config.py wsgi:app --workers 1
