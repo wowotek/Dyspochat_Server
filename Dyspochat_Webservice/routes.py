@@ -104,7 +104,7 @@ def user_register():
     if add_status[0]:
         print(f"user {add_status[1].username} registered")
         return json_response(
-            status_=201,
+            status_=200,
             data_={
                 "status": "success",
                 "user": {
@@ -133,7 +133,7 @@ def user_login():
         if user.password == password:
             session: Session = db.add_session()
             return json_response(
-                status_=201,
+                status_=200,
                 data_={
                     "status": "success",
                     "session": {
@@ -221,7 +221,7 @@ def chatroom_add():
     if chatroom:
         print(f"{chatroom.id} created")
         return json_response(
-            status_=201,
+            status_=200,
             data_={
                 "status": "success",
                 "chatroom": {
@@ -353,7 +353,7 @@ def chatroom_add_recipients():
                     )
             chatroom.add_recipients(recipient)
             return json_response(
-                status_=201,
+                status_=200,
                 data_={
                     "status": "success"
                 }
@@ -478,7 +478,7 @@ def chat_add():
                         }
                     )
                     return json_response(
-                        status_=201,
+                        status_=200,
                         data_={
                             "status": "success"
                         }
@@ -561,7 +561,7 @@ def session_invalidate():
     if session:
         if db.del_session(session_hash):
             return json_response(
-                status_=201,
+                status_=200,
                 data_={
                     "status": "success",
                     "session": {
@@ -596,7 +596,7 @@ def session_add_data():
     if session:
         if session.add_data(session_data):
             return json_response(
-                status_=201,
+                status_=200,
                 data_={
                     "status": "success",
                     "session": {
