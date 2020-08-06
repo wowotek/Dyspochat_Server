@@ -1,0 +1,1 @@
+venv/bin/gunicorn --config gunicorn_config.py wsgi:app
