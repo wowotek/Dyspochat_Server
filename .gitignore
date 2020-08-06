@@ -2,3 +2,8 @@
 __pycache__/
 *.pyc
 venv/
+dyspochat_webservice.sock
+*.sock
+access.log
+error.log
+*.log
