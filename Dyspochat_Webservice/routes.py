@@ -188,59 +188,6 @@ def user_unregister():
         }
     )
 
-@app.route('/user', methods=['GET'])
-@require_apikey
-def user_get():
-    print("[/user USER_GET] Geting User Info...")
-    print(f"[/user USER_GET] {request.json}")
-    user_id: int = int(request.json["user_id"])
-    user: User = db.get_user_id(user_id)
-
-    if user == None:
-        return json_response(
-            status_=404,
-            data_={
-                "status": "user_not_found"
-            }
-        )
-
-    return json_response(
-        status_=200,
-        data_={
-            "status": "success",
-            "user": {
-                "id": user.id,
-                "username": user.username,
-                "pseudonym": user.pseudonym
-            }
-        }
-    )
-
-@app.route('/user/<int:user_id>', methods=['GET'])
-@require_apikey
-def user_get_other(user_id: int):
-    user: User = db.get_user_id(user_id)
-
-    if user == None:
-        return json_response(
-            status_=404,
-            data_={
-                "status": "user_not_found"
-            }
-        )
-
-    return json_response(
-        status_=200,
-        data_={
-            "status": "success",
-            "user": {
-                "id": user.id,
-                "username": user.username,
-                "pseudonym": user.pseudonym
-            }
-        }
-    )
-
 @app.route('/user/info', methods=['POST'])
 @require_apikey
 def user_get_other_post():
@@ -291,12 +238,12 @@ def chatroom_add():
         }
     )
 
-@app.route('/chatroom/<int:chatroom_id>', methods=['GET'])
+@app.route('/chatroom/info', methods=['POST'])
 @require_apikey
-def chatroom_info(chatroom_id):
-    print("chatroom_info", chatroom_id)
-
+def chatroom_info():
+    chatroom_id: int = int(request.json["chatroom_id"])
     chatroom: Chatroom = db.get_chatroom(chatroom_id)
+
     if chatroom:
         return json_response(
             status_=200,
@@ -333,10 +280,12 @@ def chatroom_info(chatroom_id):
         }
     )
 
-@app.route('/chatroom/<int:chatroom_id>', methods=['DELETE'])
+@app.route('/chatroom/delete', methods=['POST'])
 @require_apikey
-def chatroom_delete(chatroom_id):
+def chatroom_delete():
+    chatroom_id: int = int(request.json["chatroom_id"])
     chatroom = db.delete_chatroom(chatroom_id)
+
     if chatroom:
         event_pusher.trigger(
             str(chatroom.id),
@@ -557,7 +506,7 @@ def chat_add():
         }
     )
 
-@app.route('/chat', methods=['GET'])
+@app.route('/chat/info', methods=['POST'])
 @require_apikey
 def chat_info():
     chatroom_id = int(request.json["chatroom_id"])
@@ -674,7 +623,7 @@ def session_add_data():
         }
     )
 
-@app.route('/session/data/all', methods=['GET'])
+@app.route('/session/data/all', methods=['POST'])
 @require_apikey
 def session_get_all_data():
     session_hash: str = str(request.json["session_hash"])
@@ -704,7 +653,7 @@ def session_get_all_data():
         }
     )
 
-@app.route('/session/data', methods=['GET'])
+@app.route('/session/data', methods=['POST'])
 @require_apikey
 def session_get_data():
     session_hash: str = str(request.json["session_hash"])
