@@ -91,7 +91,7 @@ class Session:
         try:
             self.session_data.add(data)
         except Exception as e:
-            print(f"Error adding session data to session({self.id}): {e}", flush=True)
+            print(f"[SESSION.add_data] Error adding session data to session({self.id}): {e}", flush=True)
             return False
         return True
     
@@ -103,7 +103,7 @@ class Session:
                     return True
             return False
         except Exception as e:
-            print(f"Error deleteing session data at session({self.id}): {e}", flush=True)
+            print(f"[SESSION.del_data] Error deleting session data at session({self.id}): {e}", flush=True)
             return False
     
     def get_data(self, target_key: str) -> SessionData:

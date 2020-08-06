@@ -62,9 +62,11 @@ def apikey_check():
 @app.route('/misc/sane', methods=['GET'])
 @require_apikey
 def sanity_check():
+    print("--- SANITY CHECK STARTED ---")
     sanity_data = db.add_sanity_check_data()
-    print(sanity_data)
+
     if db.remove_sanity_check_data(sanity_data):
+        print("SANITY CHECK ENDED")
         return json_response(
             status_=200,
             data_={
