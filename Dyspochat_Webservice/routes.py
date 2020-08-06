@@ -191,6 +191,8 @@ def user_unregister():
 @app.route('/user', methods=['GET'])
 @require_apikey
 def user_get():
+    print("[/user USER_GET] Geting User Info...")
+    print(f"[/user USER_GET] {request.json}")
     user_id: int = int(request.json["user_id"])
     user: User = db.get_user_id(user_id)
 

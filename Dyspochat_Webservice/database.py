@@ -150,7 +150,7 @@ class Database:
                     print(f"[ADD_USER] Success deleting user {user.id}")
                     return (True, user)
             
-            print(f"[DEL_USER_ID] Failed to delete user_id: {e}")
+            print(f"[DEL_USER_ID] Failed to delete user_id")
             return (False, None)
         except Exception as e:
             print(f"[DEL_USER_ID] Failed to delete user_id: {e}")
