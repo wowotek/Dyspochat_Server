@@ -215,6 +215,31 @@ def user_get():
             }
         }
     )
+
+@app.route('/user/<int:user_id>', methods=['GET'])
+@require_apikey
+def user_get_other(user_id: int):
+    user: User = db.get_user_id(user_id)
+
+    if user == None:
+        return json_response(
+            status_=404,
+            data_={
+                "status": "user_not_found"
+            }
+        )
+
+    return json_response(
+        status_=200,
+        data_={
+            "status": "success",
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                "pseudonym": user.pseudonym
+            }
+        }
+    )
 ################ END USER BLUEPRINTS ################
 
 ################ CHATROOM BLUEPRINTS ################
