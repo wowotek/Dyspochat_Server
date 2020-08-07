@@ -162,7 +162,7 @@ def user_login():
         }
     )
 
-@app.route('/user/delete', methods=['DELETE'])
+@app.route('/user/delete', methods=['POST'])
 @require_apikey
 def user_unregister():
     user_id: int = int(request.json["user_id"])
