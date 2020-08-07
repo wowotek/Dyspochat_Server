@@ -96,7 +96,7 @@ def get_pseudonym():
 ################ END MISC BLUEPRINTS ################
 
 ################## USER BLUEPRINTS ##################
-@app.route('/user', methods=['PUT'])
+@app.route('/user/register', methods=['POST'])
 @require_apikey
 def user_register():
     username: str = str(request.json["username"])
@@ -124,7 +124,7 @@ def user_register():
     )
 
 
-@app.route('/user', methods=['POST'])
+@app.route('/user/login', methods=['POST'])
 @require_apikey
 def user_login():
     username: str = str(request.json["username"])
@@ -162,7 +162,7 @@ def user_login():
         }
     )
 
-@app.route('/user', methods=['DELETE'])
+@app.route('/user/delete', methods=['DELETE'])
 @require_apikey
 def user_unregister():
     user_id: int = int(request.json["user_id"])
@@ -190,7 +190,7 @@ def user_unregister():
 
 @app.route('/user/info', methods=['POST'])
 @require_apikey
-def user_get_other_post():
+def user_info():
     user_id: int = int(request.json["user_id"])
     user: User = db.get_user_id(user_id)
 
@@ -216,7 +216,7 @@ def user_get_other_post():
 ################ END USER BLUEPRINTS ################
 
 ################ CHATROOM BLUEPRINTS ################
-@app.route('/chatroom', methods=['PUT'])
+@app.route('/chatroom/add', methods=['POST'])
 @require_apikey
 def chatroom_add():
     chatroom: Chatroom = db.add_chatroom()
@@ -312,7 +312,7 @@ def chatroom_delete():
         }
     )
 
-@app.route('/chatroom', methods=['POST'])
+@app.route('/chatroom/recipient/add', methods=['POST'])
 @require_apikey
 def chatroom_add_recipients():
     print("chatroom_add_recipients", request.json)
@@ -324,15 +324,21 @@ def chatroom_add_recipients():
 
     if chatroom:
         if recipient:
+            add_join_party = True
             # check if recipient already exist
-            chatroom.add_chat(
-                Chat(
-                    db.get_chat_last_id(chatroom.id),
-                    recipient,
-                    time.time(),
-                    f"{recipient.pseudonym} joined the party"
+            # for i in chatroom.chats:
+            #     if "joined the party" in i.message:
+            #         add_join_party = False
+        
+            if add_join_party:
+                chatroom.add_chat(
+                    Chat(
+                        db.get_chat_last_id(chatroom.id),
+                        recipient,
+                        time.time(),
+                        f"{recipient.pseudonym} joined the party"
+                    )
                 )
-            )
             event_pusher.trigger(
                 str(chatroom.id),
                 u'new_recipient',
@@ -376,7 +382,7 @@ def chatroom_add_recipients():
     )
 
 
-@app.route('/chatroom', methods=['PATCH'])
+@app.route('/chatroom/recipient/delete', methods=['POST'])
 @require_apikey
 def chatroom_del_recipients():
     chatroom_id = int(request.json["chatroom_id"])
@@ -390,14 +396,19 @@ def chatroom_del_recipients():
             # check if recipient exist in chatroom
             for i in chatroom.recipients:
                 if i.id == recipient.id:
-                    chatroom.add_chat(
-                        Chat(
-                            db.get_chat_last_id(chatroom.id),
-                            recipient,
-                            time.time(),
-                            f"{recipient.pseudonym} is leaving chatroom"
+                    add_leave_party = True
+                    # for i in chatroom.chats:
+                    #     if "is leaving chatroom" in i.message:
+                    #         add_leave_party = False
+                    if add_leave_party:
+                        chatroom.add_chat(
+                            Chat(
+                                db.get_chat_last_id(chatroom.id),
+                                recipient,
+                                time.time(),
+                                f"{recipient.pseudonym} is leaving chatroom"
+                            )
                         )
-                    )
                     chatroom.recipients.remove(i)
                     event_pusher.trigger(
                         str(chatroom.id),
@@ -445,7 +456,7 @@ def chatroom_del_recipients():
 ############## END CHATROOM BLUEPRINTS ##############
 
 ################## CHAT BLUEPRINTS ##################
-@app.route('/chat', methods=['PUT'])
+@app.route('/chat/add', methods=['POST'])
 @require_apikey
 def chat_add():
     chatroom_id = int(request.json["chatroom_id"])
@@ -556,7 +567,7 @@ def chat_info():
 ################ END CHAT BLUEPRINTS ################
 
 ################ SESSIONS BLUEPRINTS ################
-@app.route('/session', methods=['PURGE'])
+@app.route('/session/invalidate', methods=['POST'])
 @require_apikey
 def session_invalidate():
     session_hash: str = str(request.json["session_hash"])
@@ -587,7 +598,7 @@ def session_invalidate():
         }
     )
 
-@app.route('/sessions/data', methods=['PUT'])
+@app.route('/sessions/data/add', methods=['POST'])
 @require_apikey
 def session_add_data():
     session_hash: str = str(request.json["session_hash"])
@@ -653,7 +664,7 @@ def session_get_all_data():
         }
     )
 
-@app.route('/session/data', methods=['POST'])
+@app.route('/session/data/info', methods=['POST'])
 @require_apikey
 def session_get_data():
     session_hash: str = str(request.json["session_hash"])
@@ -690,7 +701,7 @@ def session_get_data():
         }
     )
 
-@app.route('/session/data', methods=['DELETE'])
+@app.route('/session/data/delete', methods=['POST'])
 @require_apikey
 def session_del_data():
     session_hash: str = str(request.json["session_hash"])
