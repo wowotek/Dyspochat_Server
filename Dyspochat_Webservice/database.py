@@ -227,14 +227,14 @@ class Database:
     ### CHAT API ###
     def get_chat_last_id(self, chatroom_id: int) -> int:
         print(f"[GET_CHAT_LAST_ID] Getting from {chatroom_id}")
-        last_id: int = 0
         for i in self.db_chatroom:
-            if i.id == chatroom_id:
+            if int(i.id) == int(chatroom_id):
+                last_id: int = 0
                 for j in i.chats:
-                    if j.id >= last_id:
+                    if int(j.id) >= int(last_id):
                         last_id = j.id
                 print(f"[GET_CHAT_LAST_ID] Acquired {last_id} as last id")
-                return last_id
+                return last_id + 1
     ### END CHAT API ###
 
     ### SESSION API ###

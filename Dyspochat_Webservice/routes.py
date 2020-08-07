@@ -470,9 +470,9 @@ def chat_add():
         if chat_sender:
             for i in chatroom.recipients:
                 if i.id == chat_sender.id:
-                    last_chat_id = db.get_chat_last_id(chatroom.id) + 1
-                    chatroom.add_chat(Chat(last_chat_id, chat_sender, time.time(), chat_message))
-                    chat: Chat = chatroom.get_chat_id(last_chat_id)
+                    last_chat_id = db.get_chat_last_id(chatroom_id) + 1
+                    chat: Chat = Chat(last_chat_id, chat_sender, time.time(), chat_message)
+                    chatroom.add_chat(chat)
                     event_pusher.trigger(
                         str(chatroom.id),
                         u'new_chat',
@@ -495,7 +495,12 @@ def chat_add():
                     return json_response(
                         status_=200,
                         data_={
-                            "status": "success"
+                            "status": "success",
+                            "chat": {
+                                "id": chat.id,
+                                "message": chat.message,
+                                "sender": chat.sender
+                            }
                         }
                     )
             return json_response(
