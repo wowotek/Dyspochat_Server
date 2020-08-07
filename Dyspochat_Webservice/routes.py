@@ -499,6 +499,7 @@ def chat_add():
                             "chat": {
                                 "id": chat.id,
                                 "message": chat.message,
+                                "timestamp": chat.timestamp,
                                 "sender": {
                                     "id": chat.sender.id,
                                     "pseudonym": chat.sender.pseudonym,
