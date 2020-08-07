@@ -546,7 +546,12 @@ def chat_info():
                                 {
                                     "id": i.id,
                                     "timestamp": i.timestamp,
-                                    "message": i.message
+                                    "message": i.message,
+                                    "sender": {
+                                        "id": i.sender.id,
+                                        "pseudonym": i.sender.pseudonym,
+                                        "username": i.sender.username,
+                                    }
                                 }
                             )
                     return json_response(
