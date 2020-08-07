@@ -499,7 +499,11 @@ def chat_add():
                             "chat": {
                                 "id": chat.id,
                                 "message": chat.message,
-                                "sender": chat.sender
+                                "sender": {
+                                    "id": chat.sender.id,
+                                    "pseudonym": chat.sender.pseudonym,
+                                    "username": chat.sender.username
+                                }
                             }
                         }
                     )
