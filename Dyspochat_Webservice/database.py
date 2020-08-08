@@ -142,7 +142,7 @@ class Database:
         print(f"[ADD_USER] Hashing User Password using sha512")
         print(f"[ADD_USER] Password : {user.password}")
         print(f"[ADD_USER] Hashed : {p_hash}")
-        user.password = sha512(user.password.encode("utf-8"))
+        user.password = p_hash
         print(f"[ADD_USER] Adding User to Database")
         try:
             self.db_user.add(user)
