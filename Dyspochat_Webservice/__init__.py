@@ -22,7 +22,6 @@ event_pusher = pusher.Pusher(
     cluster=PConfig.cluster,
     ssl=True
 )
-
 # TODO: ENGINE/SSL: create properly Signed SSL key and certificates
 # TODO: ENGINE/SSL: implement SSL Context
 

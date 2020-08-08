@@ -1,0 +1,1109 @@
+{
+	"info": {
+		"_postman_id": "35c51578-20d4-4f2d-b9e0-c269429fc3eb",
+		"name": "Dyspochat",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Misc Ping",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "aadd91fc-598a-48e7-b58d-1181ff1c0ebd",
+						"exec": [
+							"pm.test(\"Server Status == Success\", function(){",
+							"    pm.expect(pm.response.text()).to.include(\"status\");",
+							"    pm.expect(pm.response.json().status).to.include(\"success\");",
+							"});",
+							"pm.test(\"Response message is 'pong!'\", function(){",
+							"    pm.expect(pm.response.json().message).to.include(\"pong!\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/misc/ping",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"misc",
+						"ping"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Misc Apikey Check",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8200698b-3249-4cc5-b4d7-6e2ad01c274f",
+						"exec": [
+							"pm.test(\"Server Status == Success\", function(){",
+							"    pm.expect(pm.response.text()).to.include(\"status\");",
+							"    pm.expect(pm.response.json().status).to.include(\"success\");",
+							"    pm.test(\"Message is 'world'\", function(){",
+							"        pm.expect(pm.response.json().message).to.include(\"world\");",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/misc/hello",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"misc",
+						"hello"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Misc Sanity Check",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1478d9e0-2509-4bba-979c-89d03d45d592",
+						"exec": [
+							"pm.test(\"Server Status\", function(){",
+							"    pm.expect(pm.response.text()).to.include(\"status\");",
+							"    if(pm.response.json().status.includes(\"success\")){",
+							"        pm.test(\"Status is success\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"success\");",
+							"        });",
+							"    } else if (pm.response.json().status.includes(\"failed\")){",
+							"        pm.test(\"Status is failed\", function(){",
+							"            pm.expect(pm.response.text()).to.include(\"failed\");",
+							"            pm.test(\"Server is insane\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"i am insane\");",
+							"            });",
+							"        });",
+							"    }",
+							"});",
+							"pm.test(\"Server is Sane\", function(){",
+							"    pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"});",
+							"pm.test(\"Respone Test\", function(){",
+							"    pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"    pm.test(\"Has Sanity Data\", function(){",
+							"        pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"    });",
+							"    pm.test(\"Sanity Data Check\", function(){",
+							"        pm.test(\"Has Api Key\", function(){",
+							"            pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"        });",
+							"        pm.test(\"Has Chatroom\", function(){",
+							"            pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"        });",
+							"        pm.test(\"Has Chats\", function(){",
+							"            pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"        });",
+							"        pm.test(\"Has Sessions\", function(){",
+							"            pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"        });",
+							"        pm.test(\"Has Users\", function(){",
+							"            pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"        });",
+							"        pm.test(\"Api Key Value\", function(){",
+							"            pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"        });",
+							"        pm.test(\"Chat Test\", function(){",
+							"            pm.test(\"Has exactly 2 chat\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"            });",
+							"            pm.test(\"Has exactly 2 recipients\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"            });",
+							"            pm.test(\"Chat 1 Username\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"            });",
+							"            pm.test(\"Chat 1 Message\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"            });",
+							"            pm.test(\"Chat 2 Username\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"            });",
+							"            pm.test(\"Chat 2 Message\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"            });",
+							"        });",
+							"        pm.test(\"Session Test\", function(){",
+							"            pm.test(\"Session Hash\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"            });",
+							"            pm.test(\"Has exactly 5 Session Data\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"            });",
+							"            pm.test(\"Session Data 1\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"            });",
+							"            pm.test(\"Session Data 2\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"            });",
+							"            pm.test(\"Session Data 3\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"            });",
+							"            pm.test(\"Session Data 4\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"            });",
+							"            pm.test(\"Session Data 5\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"            });",
+							"        });",
+							"        pm.test(\"User Test\", function(){",
+							"            pm.test(\"User 1 Test\", function(){",
+							"                pm.test(\"User 1 username\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"                });",
+							"                pm.test(\"User 1 password\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"                });",
+							"            });",
+							"            pm.test(\"User 2 Test\", function(){",
+							"                pm.test(\"User 2 username\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"                });",
+							"                pm.test(\"User 2 password\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"sanity_data\");",
+							"                });",
+							"            });",
+							"        });",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/misc/sane",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"misc",
+						"sane"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Misc Pseudonym",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6ed36f13-6ca7-4482-996c-5d8ba4b68d4f",
+						"exec": [
+							"pm.test(\"Server Status == Success\", function(){",
+							"    pm.expect(pm.response.text()).to.include(\"status\");",
+							"    pm.expect(pm.response.json().status).to.include(\"success\");",
+							"});",
+							"pm.test(\"Response has pseudonym\", function(){",
+							"    pm.expect(pm.response.text()).to.include(\"pseudonym\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/misc/pseudonym",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"misc",
+						"pseudonym"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4e0e6797-0a9b-44df-bf1d-9b924521b260",
+						"exec": [
+							"pm.test(\"Server Status\", function(){",
+							"    pm.expect(pm.response.text()).to.include(\"status\");",
+							"    if(pm.response.json().status.includes(\"success\")){",
+							"        pm.test(\"Status is success\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"success\");",
+							"            pm.test(\"Trying to set 'user_id' Environment Variables\", function(){",
+							"                pm.environment.set(\"user_id\", pm.response.json().user.id);",
+							"            });",
+							"        });",
+							"    } else if (pm.response.json().status.includes(\"username_already_exist\")){",
+							"        pm.test(\"Status is username_already_exist\", function(){});",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "b2aca9b1-4f39-40f9-bdd9-39d3e844a01a",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"{{username}}\",\n    \"password\": \"{{password}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						},
+						"urlencoded": {}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/user/register",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"user",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Info",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3017b82d-1675-42c1-8421-c1fca1fdc954",
+						"exec": [
+							"pm.test(\"Server Status\", function(){",
+							"    pm.expect(pm.response.text()).to.include(\"status\");",
+							"    if(pm.response.json().status.includes(\"success\")){",
+							"        pm.test(\"Status is success\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"success\");",
+							"            pm.test(\"response has user\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"user\");",
+							"                pm.test(\"user has id\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"id\");",
+							"                    pm.test(\"Trying to set 'user_id' Environment Variables\", function(){",
+							"                        pm.environment.set(\"user_id\", pm.response.json().user.id);",
+							"                    });",
+							"                });",
+							"                pm.test(\"user has username\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"username\");",
+							"                    pm.test(\"Setting 'user_username' Environment Variables\", function(){",
+							"                        pm.environment.set(\"user_username\", pm.response.json().user.username);",
+							"                    });",
+							"                });",
+							"                pm.test(\"user has pseudonym\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"pseudonym\");",
+							"                    pm.test(\"Setting 'user_pseudonym' Environment Variables\", function(){",
+							"                        pm.environment.set(\"user_pseudonym\", pm.response.json().user.pseudonym);",
+							"                    });",
+							"                });",
+							"            });",
+							"        });",
+							"    } else if (pm.response.json().status.includes(\"username_already_exist\")){",
+							"        pm.test(\"Status is username_already_exist\", function(){});",
+							"    }",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_id\": {{user_id}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						},
+						"urlencoded": {}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/user/info",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"user",
+						"info"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d436e94e-b12e-4baf-ba3b-a3045be57384",
+						"exec": [
+							"pm.test(\"Server Status\", function(){",
+							"    pm.expect(pm.response.text()).to.include(\"status\");",
+							"    if(pm.response.json().status.includes(\"success\")){",
+							"        pm.test(\"Status is success\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"success\");",
+							"            pm.test(\"Response has session\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"session\");",
+							"                pm.test(\"session has id\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"id\");",
+							"                    pm.test(\"Setting 'session_id' Environment Variables\", function(){",
+							"                        pm.environment.set(\"session_id\", pm.response.json().id);",
+							"                    });",
+							"                });",
+							"                pm.test(\"session has key\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"key\");",
+							"                    pm.test(\"Setting 'session_key' Environment Variables\", function(){",
+							"                        pm.environment.set(\"session_key\", pm.response.json().key);",
+							"                    });",
+							"                });",
+							"            });",
+							"            pm.test(\"Response has user\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"user\");",
+							"                pm.test(\"Trying to set 'user_id' Environment Variables\", function(){",
+							"                    pm.environment.set(\"user_id\", pm.response.json().user.id);",
+							"                });",
+							"                pm.test(\"user has username\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"session\");",
+							"                });",
+							"                pm.test(\"Response has pseudonym\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"pseudonym\");",
+							"                });",
+							"            });",
+							"        });",
+							"    } else if (pm.response.json().status.includes(\"auth_failed\")){",
+							"        pm.test(\"Status is failed\", function(){",
+							"            pm.expect(pm.response.text()).to.include(\"auth_failed\");",
+							"        });",
+							"    } else if (pm.response.json().status.includes(\"user_not_found\")){",
+							"        pm.test(\"Status is failed\", function(){",
+							"            pm.expect(pm.response.text()).to.include(\"user_not_found\");",
+							"        });",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"{{username}}\",\n    \"password\": \"{{password}}\"\n}",
+					"options": {
+						"urlencoded": {}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/user/login",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Chatroom Add",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e073d207-1462-47a4-996c-7d973a50e072",
+						"exec": [
+							"pm.test(\"Server Status\", function(){",
+							"    pm.expect(pm.response.text()).to.include(\"status\");",
+							"    if(pm.response.json().status.includes(\"success\")){",
+							"        pm.test(\"Status is success\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"success\");",
+							"            pm.test(\"response has chatroom\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"chatroom\");",
+							"                pm.test(\"chatroom has id\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"id\");",
+							"                    pm.test(\"Setting 'chatroom_id' Environment Variables\", function(){",
+							"                        pm.environment.set(\"chatroom_id\", pm.response.json().chatroom.id);",
+							"                    });",
+							"                    pm.test(\"Setting 'recipient_id' Environment Variables\", function(){",
+							"                        pm.environment.set(\"recipient_id\", pm.environment.get(\"user_id\"));",
+							"                    });",
+							"                });",
+							"            });",
+							"        });",
+							"    } else if (pm.response.json().status.includes(\"chatroom_internal_server_error\")){",
+							"        pm.test(\"Status is chatroom_internal_server_error\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"chatroom_internal_server_error\");",
+							"        });",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}"
+				},
+				"url": {
+					"raw": "{{host}}/chatroom/add",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"chatroom",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Chatroom Add Recipient",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3d513704-e8a8-458a-b0db-4bb1565bffc5",
+						"exec": [
+							"pm.test(\"Server Status\", function(){",
+							"    pm.expect(pm.response.text()).to.include(\"status\");",
+							"    if(pm.response.json().status.includes(\"success\")){",
+							"        pm.test(\"Status is success\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"success\");",
+							"        });",
+							"    } else if (pm.response.json().status.includes(\"recipient_already_exist\")){",
+							"        pm.test(\"Status is recipient_already_exist\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"recipient_already_exist\");",
+							"        });",
+							"    } else if (pm.response.json().status.includes(\"recipient_not_found\")){",
+							"        pm.test(\"Status is recipient_not_found\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"recipient_not_found\");",
+							"        });",
+							"    } else if (pm.response.json().status.includes(\"chatroom_not_found\")){",
+							"        pm.test(\"Status is chatroom_not_found\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"chatroom_not_found\");",
+							"        });",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"chatroom_id\": \"{{chatroom_id}}\",\n    \"recipient_id\": \"{{recipient_id}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/chatroom/recipient/add",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"chatroom",
+						"recipient",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Chat Add",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a20c93cb-d0fc-474e-aeba-7301b396f605",
+						"exec": [
+							"pm.test(\"Server Status\", function(){",
+							"    pm.expect(pm.response.text()).to.include(\"status\");",
+							"    if(pm.response.json().status.includes(\"success\")){",
+							"        pm.test(\"Status is success\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"success\");",
+							"            pm.test(\"Response has chat in it\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"chat\");",
+							"                pm.test(\"chat has id\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"id\");",
+							"                });",
+							"                pm.test(\"chat has message\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"message\");",
+							"                });",
+							"                pm.test(\"chat has timestamp\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"timestamp\");",
+							"                });",
+							"                pm.test(\"chat has sender\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"sender\");",
+							"                    pm.test(\"sender has pseudonym\", function(){",
+							"                        pm.expect(pm.response.text()).to.include(\"id\");",
+							"                    });",
+							"                    pm.test(\"sender has username\", function(){",
+							"                        pm.expect(pm.response.text()).to.include(\"id\");",
+							"                    });",
+							"                });",
+							"            });",
+							"        });",
+							"    } else if (pm.response.json().status.includes(\"chat_sender_not_in_chatroom\")){",
+							"        pm.test(\"Status is chat_sender_not_in_chatroom\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"chat_sender_not_in_chatroom\");",
+							"        });",
+							"    } else if (pm.response.json().status.includes(\"chat_sender_not_found\")){",
+							"        pm.test(\"Status is chat_sender_not_found\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"chat_sender_not_found\");",
+							"        });",
+							"    } else if (pm.response.json().status.includes(\"chatroom_not_found\")){",
+							"        pm.test(\"Status is chatroom_not_found\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"chatroom_not_found\");",
+							"        });",
+							"    }",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"chatroom_id\": \"{{chatroom_id}}\",\n    \"chat_sender\": \"{{user_id}}\",\n    \"chat_message\": \"This is test message, sent from Postman Sandbox by {{user_id}} {{user_pseudonym}} {{user_username}}\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/chat/add",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"chat",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Chatroom Info",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2bd2562a-3d31-48ce-b5b9-f07cd52af1d1",
+						"exec": [
+							"pm.test(\"Server Status\", function(){",
+							"    pm.expect(pm.response.text()).to.include(\"status\");",
+							"    if(pm.response.json().status.includes(\"success\")){",
+							"        pm.test(\"Status is success\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"success\");",
+							"            pm.test(\"Response Has Chatroom\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"chatroom\");",
+							"                console.log(pm.response.json().chatroom);",
+							"            });",
+							"            pm.test(\"Response Has Chats\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"chats\");",
+							"                console.log(pm.response.json().chatroom.chats);",
+							"            });",
+							"            pm.test(\"Response Has Recipients\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"recipients\");",
+							"                console.log(pm.response.json().chatroom.recipients);",
+							"            });",
+							"",
+							"            pm.test(\"Recipient have only one user in it\", function(){",
+							"                pm.expect(JSON.stringify(pm.response.json().chatroom.recipients.length)).to.include('1');",
+							"            });",
+							"            pm.test(\"Recipient have 'wowotek' in it\", function(){",
+							"                pm.expect(JSON.stringify(pm.response.json().chatroom.recipients)).to.include(\"wowotek\")",
+							"            });",
+							"            pm.test(\"Chat have only one message in it\", function(){",
+							"                pm.expect(JSON.stringify(pm.response.json().chatroom.chats.length)).to.include('2');",
+							"            });",
+							"        });",
+							"    } else if (pm.response.json().status.includes(\"chatroom_not_found\")){",
+							"        pm.test(\"Status is chatroom_not_found\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"chatroom_not_found\");",
+							"        });",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"chatroom_id\": \"{{chatroom_id}}\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/chatroom/info",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"chatroom",
+						"info"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Chat Info",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a904fdad-77e6-4d5b-a86c-322079e044c5",
+						"exec": [
+							"pm.test(\"Server Status\", function(){",
+							"    pm.expect(pm.response.text()).to.include(\"status\");",
+							"    if(pm.response.json().status.includes(\"success\")){",
+							"        pm.test(\"Status is success\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"success\");",
+							"            pm.test(\"Response has chat\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"chat\");",
+							"                pm.test(\"chat has id\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"id\");",
+							"                });",
+							"                pm.test(\"chat has message\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"message\");",
+							"                });",
+							"                pm.test(\"chat has timestamp\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"timestamp\");",
+							"                });",
+							"                pm.test(\"chat has sender\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"sender\");",
+							"                    pm.test(\"sender has pseudonym\", function(){",
+							"                        pm.expect(pm.response.text()).to.include(\"id\");",
+							"                    });",
+							"                    pm.test(\"sender has username\", function(){",
+							"                        pm.expect(pm.response.text()).to.include(\"id\");",
+							"                    });",
+							"                });",
+							"            });",
+							"        });",
+							"    } else if (pm.response.json().status.includes(\"chat_sender_not_in_chatroom\")){",
+							"        pm.test(\"Status is chat_sender_not_in_chatroom\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"chat_sender_not_in_chatroom\");",
+							"        });",
+							"    } else if (pm.response.json().status.includes(\"chat_sender_not_found\")){",
+							"        pm.test(\"Status is chat_sender_not_found\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"chat_sender_not_found\");",
+							"        });",
+							"    } else if (pm.response.json().status.includes(\"chatroom_not_found\")){",
+							"        pm.test(\"Status is chatroom_not_found\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"chatroom_not_found\");",
+							"        });",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"chatroom_id\": \"{{chatroom_id}}\",\n    \"chat_sender\": \"{{user_id}}\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/chat/info",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"chat",
+						"info"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Chatroom Delete Recipient",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4dbe714f-dc81-4560-817b-90cc1c7ee531",
+						"exec": [
+							"pm.test(\"Server Status\", function(){",
+							"    pm.expect(pm.response.text()).to.include(\"status\");",
+							"    if(pm.response.json().status.includes(\"success\")){",
+							"        pm.test(\"Status is success\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"success\");",
+							"            pm.test(\"Status has recipient\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"user\");",
+							"                pm.test(\"user has id\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"id\");",
+							"                });",
+							"                pm.test(\"user has pseudonym\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"pseudonym\");",
+							"                });",
+							"                pm.test(\"user has username\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"username\");",
+							"                });",
+							"            });",
+							"        });",
+							"    } else if (pm.response.json().status.includes(\"recipient_not_in_chatroom\")){",
+							"        pm.test(\"Status is recipient_not_in_chatroom\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"recipient_not_in_chatroom\");",
+							"        });",
+							"    } else if (pm.response.json().status.includes(\"recipient_not_found\")){",
+							"        pm.test(\"Status is recipient_not_found\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"recipient_not_found\");",
+							"        });",
+							"    } else if (pm.response.json().status.includes(\"chatroom_not_found\")){",
+							"        pm.test(\"Status is chatroom_not_found\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"chatroom_not_found\");",
+							"        });",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"chatroom_id\": \"{{chatroom_id}}\",\n    \"recipient_id\": \"{{user_id}}\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/chatroom/recipient/delete",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"chatroom",
+						"recipient",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Chatroom Delete",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "71f6d84c-a46f-48a3-8758-f6a70a812338",
+						"exec": [
+							"pm.test(\"Server Status\", function(){",
+							"    pm.expect(pm.response.text()).to.include(\"status\");",
+							"    if(pm.response.json().status.includes(\"success\")){",
+							"        pm.test(\"Status is success\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"success\");",
+							"            pm.test(\"Data Has Chatroom\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"chatroom\");",
+							"                pm.test(\"Data Has Chatroom id\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"id\");",
+							"                });",
+							"            });",
+							"",
+							"        });",
+							"    } else if (pm.response.json().status.includes(\"chatroom_not_found\")){",
+							"        pm.test(\"Status is chatroom_not_found\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"chatroom_not_found\");",
+							"        });",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"chatroom_id\": \"{{chatroom_id}}\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/chatroom/delete",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"chatroom",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Unregister",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "dcbc3f0b-3893-4de9-8f2b-fd1bcf2383dc",
+						"exec": [
+							"pm.test(\"Server Status\", function(){",
+							"    pm.expect(pm.response.text()).to.include(\"status\");",
+							"    if(pm.response.json().status.includes(\"success\")){",
+							"        pm.test(\"Status is success\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"success\");",
+							"            pm.test(\"Data Has User\", function(){",
+							"                pm.expect(pm.response.text()).to.include(\"user\");",
+							"                pm.test(\"User Has id\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"id\");",
+							"                });",
+							"                pm.test(\"User Has username\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"username\");",
+							"                });",
+							"                pm.test(\"User Has pseudonym\", function(){",
+							"                    pm.expect(pm.response.text()).to.include(\"pseudonym\");",
+							"                });",
+							"            });",
+							"",
+							"        });",
+							"    } else if (pm.response.json().status.includes(\"chatroom_not_found\")){",
+							"        pm.test(\"Status is chatroom_not_found\", function(){",
+							"            pm.expect(pm.response.json().status).to.include(\"chatroom_not_found\");",
+							"        });",
+							"    }",
+							"});",
+							"",
+							"pm.test(\"Unsetting Testing Variables...\", function(){",
+							"    pm.test(\"Unsetting password\", function(){",
+							"        pm.environment.unset(\"password\");",
+							"    });",
+							"    pm.test(\"Unsetting username\", function(){",
+							"        pm.environment.unset(\"username\");",
+							"    });",
+							"    pm.test(\"Unsetting user_id\", function(){",
+							"        pm.environment.unset(\"user_id\");",
+							"    });",
+							"    pm.test(\"Unsetting user_pseudonym\", function(){",
+							"        pm.environment.unset(\"user_pseudonym\");",
+							"    });",
+							"    pm.test(\"Unsetting user_username\", function(){",
+							"        pm.environment.unset(\"user_username\");",
+							"    });",
+							"    pm.test(\"Unsetting session_id\", function(){",
+							"        pm.environment.unset(\"session_id\");",
+							"    });",
+							"    pm.test(\"Unsetting session_key\", function(){",
+							"        pm.environment.unset(\"session_key\");",
+							"    });",
+							"    pm.test(\"Unsetting chatroom_id\", function(){",
+							"        pm.environment.unset(\"chatroom_id\");",
+							"    });",
+							"    pm.test(\"Unsetting recipient_id\", function(){",
+							"        pm.environment.unset(\"recipient_id\");",
+							"    });",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_id\": \"{{user_id}}\"\n}",
+					"options": {
+						"urlencoded": {}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/user/delete",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"user",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "wowotek-key",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "x-api-key",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "53789cc8-9f89-4a9c-ae62-2d4b4c25e4f1",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "1d5dc2d0-c891-4c33-9d10-cdd1bc20fa14",
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Response Status == 200\", function(){",
+					"    pm.response.to.have.status(200);",
+					"});"
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

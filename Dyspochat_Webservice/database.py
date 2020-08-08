@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import time
+from hashlib import sha512
 from typing import Set, List, Tuple, Union
 
 from .models import User, Chat, Chatroom, Session, SessionData
@@ -124,15 +125,27 @@ class Database:
         return [i for i in self.db_user]
 
     def add_user(self, user: User) -> Tuple[bool, Union[User, None]]:
-        print(f"[ADD_USER] adding user {user.__dict__}")
+        print(f"[ADD_USER] processing user {user.__dict__}")
+        for i in self.db_user:
+            if i.username == user.username:
+                print("[ADD_USER] User Already Found, not registering")
+                return (False, None)
+        print(f"[ADD_USER] User available registering")
+        print(f"[ADD_USER] Changid id to last id of the database (Autoincrement)")
+        user.id = self.get_user_last_id()
+        print(f"[ADD_USER] Get New ID of {user.id}")
+        print(f"[ADD_USER] Changing literal string of password to string of bytes")
+        print(f"[ADD_USER] literal string : {user.password}")
+        p_byte = user.password.encode("utf-8")
+        print(f"[ADD_USER] string of bytes (utf-8) : {p_byte}")
+        p_hash = sha512(user.password.encode("utf-8")).hexdigest()
+        print(f"[ADD_USER] Hashing User Password using sha512")
+        print(f"[ADD_USER] Password : {user.password}")
+        print(f"[ADD_USER] Hashed : {p_hash}")
+        user.password = sha512(user.password.encode("utf-8"))
+        print(f"[ADD_USER] Adding User to Database")
         try:
-            for i in self.db_user:
-                if i.username == user.username:
-                    return (False, None)
-
-            user.id = self.get_user_last_id()
             self.db_user.add(user)
-
             print(f"[ADD_USER] Success Adding User {user.id}")
             return (True, user)
         except Exception as e:
